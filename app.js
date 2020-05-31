@@ -9,10 +9,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect(keys.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.use(bodyParser.json());
-app.use(cors({
-    origin: "http://localhost:3000",
-    methods: ['GET', 'POST']
-}));
+app.use(cors(keys.corsOptions));
 
 require("./routes/test.routes")(app);
 require("./routes/reads.routes")(app);
