@@ -35,14 +35,16 @@ const HomePage = () => {
                     <Col lg={4} sm={12}>
                         <h2>Welcome To Average Joe Coding!</h2>
                         <p>
-                            Hello my name is Mark, and welcome to my space in the
+                            Hello and welcome to my space in the
                             virtual world! AJC is a space where I share my insights and 
-                            expereinces with programming, but in a light hearted way!
+                            expereinces with programming in a light hearted way!
                         </p>
                         <div>
+                            <h4>My Stack</h4>
+
                             <h4>Follow Us!</h4>
-                            <a href="/" title="Twitter" target="_blank" style={{ fontSize: "24pt"}}><i className="fab fa-twitter"></i></a>
-                            <a href="/" title="YouTube" target="_blank" style={{ fontSize: "24pt", color: 'red', marginLeft: '0.5em' }}><i className="fab fa-youtube"></i></a>
+                            <a href="https://twitter.com/averagejoecodi1" title="Twitter" target="_blank" rel="noopener noreferrer" style={{ fontSize: "24pt"}}><i className="fab fa-twitter"></i></a>
+                            {/* <a href="/" title="YouTube" target="_blank" style={{ fontSize: "24pt", color: 'red', marginLeft: '0.5em' }}><i className="fab fa-youtube"></i></a> */}
                             <Form>
                                 <Form.Group controlId="email">
                                     <Form.Label><h5>Subscribe</h5></Form.Label>

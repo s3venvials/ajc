@@ -36,7 +36,7 @@ const CardReads = (props) => {
                                     <Card.Text>
                                         {`${item.content.slice(0, 100)}...`}
                                     </Card.Text>
-                                    <a href="/" variant="primary">Read More</a>
+                                    <a href={`/reads/${item._id}/${item.title}`} variant="primary">Read More</a>
                                 </Card.Body>
                             </Card>
                         </Col>
