@@ -27,7 +27,7 @@ module.exports = (app) => {
 
     app.get("/api/reads/one", async (req, res) => {
 
-        let { id } = req.body;
+        let { id } = req.query;
 
         try {
 
