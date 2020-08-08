@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Card from 'react-bootstrap/Card';
 import { Row, Col } from 'react-bootstrap';
+import Badge from 'react-bootstrap/Badge';
+import Button from 'react-bootstrap/Button';
+import ReactHtmlParser from 'react-html-parser';
 
 const CardReads = (props) => {
     const [data, setData] = useState([]);
@@ -24,19 +27,26 @@ const CardReads = (props) => {
                 {data.map((item, index) => {
                     return (
                         <Col key={index} lg={4} style={{ marginBottom: '1em' }}>
-                            <Card style={{ width: '18rem' }}>
-                                {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
+                            <Card style={{ width: '18rem', backgroundColor: '#eaeaea' }}>
                                 <Card.Body>
                                     {item.title ?
                                         <Card.Title>{item.title}</Card.Title>
                                         :
                                         <Card.Title>Title Not Available</Card.Title>
                                     }
+                                    <hr />
+                                    
+                                    {item.category.map((item, index) => {
+                                        return <Badge pill variant="info">{item}</Badge>
+                                    })
+                                    }
                                     
                                     <Card.Text>
-                                        {`${item.content.slice(0, 100)}...`}
+                                    {
+                                        ReactHtmlParser(`${item.content.slice(0, 100)}...`)
+                                    }
                                     </Card.Text>
-                                    <a href={`/reads/${item._id}/${item.title}`} variant="primary">Read More</a>
+                                    <Button href={`/reads/${item._id}/${item.title}`} variant="primary" size="sm">Read More</Button>
                                 </Card.Body>
                             </Card>
                         </Col>

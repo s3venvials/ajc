@@ -1,27 +1,45 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Container, Form, Button } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
+import ReactHtmlParser from 'react-html-parser';
 
 const AdminReads = () => {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
+    const [category, setCategory] = useState("");
+    const [file, setFile] = useState();
+    const [name, setName] = useState();
 
     const handleChange = event => {
         const { name, value } = event.target;
         if (name === "title") setTitle(value);
         if (name === "content") setContent(value);
+        if (name === "category") setCategory(value);
     }
 
     const handleSubmit = async event => {
 
         event.preventDefault();
         try {
-            await axios.post("/api/reads/new", { title, content }, { withCredentials: true });
-            setTitle("");
-            setContent("");
 
+            const data = new FormData()
+            data.append("name", name);
+            data.append("file", file);
+            data.append("title", title);
+            data.append("category", category);
+            data.append("content", content);
+            let res = await axios.post("/api/reads/new", data, { withCredentials: true });
+
+            setTitle("");
+            setCategory("");
+            setContent("");
+            setFile("");
+            setName("");
+
+            alert(res.data.message);
         } catch (error) {
-            console.log(error);
+            alert(error.toString());
         }
     }
 
@@ -33,9 +51,41 @@ const AdminReads = () => {
                     <Form.Control type="text" name="title" value={title} onChange={handleChange} />
                 </Form.Group>
                 <Form.Group>
-                    <Form.Label>Content</Form.Label>
-                    <Form.Control as="textarea" rows="10" name="content" value={content} onChange={handleChange} />
+                    <Form.Label>Category</Form.Label>
+                    <Form.Control type="text" name="category" value={category} onChange={handleChange} />
                 </Form.Group>
+                <Form.Group>
+                    <Form.Label>Image Name</Form.Label>
+                    <Form.Control type="text" name="name" onChange={event => {
+                        const { value } = event.target;
+                        setName(value);
+                    }} />
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Image Upload</Form.Label>
+                    <Form.Control type="file" name="file" onChange={event => {
+                        const file = event.target.files[0];
+                        setFile(file);
+                    }} />
+                </Form.Group>
+                <Row>
+                    <Col lg={6}>
+                        <Form.Group>
+                            <Form.Label>Content</Form.Label>
+                            <Form.Control as="textarea" rows="10" name="content" value={content} onChange={handleChange} />
+                        </Form.Group>
+                    </Col>
+
+                    <Col lg={6}>
+                        <Form.Group>
+                            <Form.Label>Preview Content</Form.Label>
+                            <div style={{ border: "1px solid #CCC", minHeight: '254px', padding: '0.5em' }}>
+                                {ReactHtmlParser(content)}
+                            </div>
+                        </Form.Group>
+                    </Col>
+                </Row>
+
                 <Button variant="primary" type="submit">
                     Submit
                 </Button>

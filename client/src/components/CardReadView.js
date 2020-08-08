@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Container, Jumbotron } from 'react-bootstrap';
+import { Container, Jumbotron, Row, Col, Image } from 'react-bootstrap';
+import ReactHtmlParser from 'react-html-parser';
 const id = window.location.pathname.split("/")[2];
 
 const CardReadView = () => {
@@ -24,24 +25,33 @@ const CardReadView = () => {
                 {read.map((item, index) => {
                     return (
                         <div key={index}>
-                            <h1>{item.title}</h1>
+                            <h1 style={{ textAlign: 'center' }}>{item.title}</h1>
+
+                            <p>
+                                {item.subTitle}
+                            </p>
                         </div>
                     )
                 })}
-               
-                <p>
-                    This is a simple hero unit, a simple jumbotron-style component for calling
-                    extra attention to featured content or information.
-                </p>
             </Jumbotron>
 
             {read.map((item, index) => {
-                    return (
-                        <div key={index}>
-                            <p>{item.content}</p>
-                        </div>
-                    )
-                })}
+                return (
+                    <div key={index}>
+                        {item.imgPath &&
+                            <Row>
+                                <Col lg={12}>
+                                    <Image fluid src={`${item.imgPath}`} alt="comic-strip" />
+                                </Col>
+                            </Row>
+                        }
+
+                        {
+                            ReactHtmlParser(item.content)
+                        }
+                    </div>
+                )
+            })}
         </Container>
     )
 }

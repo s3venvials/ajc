@@ -3,8 +3,10 @@ const Schema = mongoose.Schema;
 
 const Reads = new Schema({
     title: String,
+    category: [],
     content: String,
-    comments: []
+    createdDate: { type: Date, default: new Date() },
+    imgPath: String
 });
 
 module.exports = mongoose.model('reads', Reads);

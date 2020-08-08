@@ -10,6 +10,7 @@ mongoose.connect(keys.mongoURI, { useNewUrlParser: true, useUnifiedTopology: tru
 
 app.use(bodyParser.json());
 app.use(cors(keys.corsOptions));
+app.use("/uploads", express.static("uploads"));
 
 require("./routes/test.routes")(app);
 require("./routes/reads.routes")(app);

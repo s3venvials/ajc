@@ -1,13 +1,36 @@
 let readsModel = require("../models/reads");
+const multer = require("multer");
+const upload = multer();
+const fs = require("fs")
+const { promisify } = require("util");
+const pipeline = promisify(require("stream").pipeline);
 
 module.exports = (app) => {
 
-    app.post("/api/reads/new", async (req, res) => {
+    app.post("/api/reads/new", upload.single("file"), async (req, res) => {
         try {
 
-            let read = new readsModel(req.body);
+            const { file, body: { title, category, name, content }} = req;
+            const fileName = name + file.detectedFileExtension;
+            const imgPath = `/uploads/${fileName}`;
+
+            await pipeline(
+                file.stream,
+                fs.createWriteStream(`${__dirname}/../client/public/uploads/${fileName}`)
+            )
+
+            let categories = category.split(",");
+            let reads = {
+                title,
+                category: categories,
+                content,
+                imgPath
+            }
+
+            let read = new readsModel(reads);
             await read.save();
-            res.json({ message: "New read was successfully saved!" });
+
+            return res.json({ message: "Reads was added successfully!" });
 
         } catch (error) {
             res.status(500).json(error);
