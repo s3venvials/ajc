@@ -54,7 +54,7 @@ const HomePage = () => {
 
                 <Col lg={12} style={{ textAlign: 'center' }}>
                     <hr />
-                        <h3>Random Reads</h3>
+                        <h3>Reads</h3>
                     <hr />
                 </Col>
 

@@ -2,10 +2,13 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Container, Jumbotron, Row, Col, Image } from 'react-bootstrap';
 import ReactHtmlParser from 'react-html-parser';
-const id = window.location.pathname.split("/")[2];
+import Playground from './Playground';
+import Rating from './Rating';
+import Comments from './Comments';
 
-const CardReadView = () => {
+const CardReadView = (props) => {
     const [read, setRead] = useState([]);
+    const id = window.location.pathname.split("/")[2];
 
     useEffect(() => {
         let getRead = async id => {
@@ -17,7 +20,7 @@ const CardReadView = () => {
             }
         }
         getRead(id);
-    }, []);
+    }, [id]);
 
     return (
         <Container>
@@ -52,7 +55,11 @@ const CardReadView = () => {
                     </div>
                 )
             })}
-        </Container>
+
+            <Playground />
+            <Rating />
+            <Comments />
+        </Container >
     )
 }
 
