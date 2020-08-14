@@ -23,17 +23,19 @@ const HomePage = () => {
                         <Row>
                             <Col lg={6} sm={12}>
                                 <h2>Welcome To Average Joe Coding!</h2>
-                                <h6>
+                                <h5>
                                     Hello and welcome to my space in the
                                     virtual world! AJC is a space where I share my insights and
                                     expereinces with programming in a light hearted way!
-                                </h6>
+                                </h5>
+                                <br />
+                                <h6 style={{ opacity: '0.5' }}>"Learning how to code for humans."</h6>
+                                <p style={{ opacity: '0.5', paddingLeft: '3em' }}>- AJC</p>
 
                                 <Image style={{ border: 'none', backgroundColor: '#f5f5f5' }} src="https://res.cloudinary.com/frontndev/image/upload/c_scale,h_250,w_425/v1594492723/ajc-bc_jcv3eo.png" alt="ajc" thumbnail />
                             </Col>
                             <Col lg={6} sm={12}>
                                 <div>
-
                                     <h4>Follow Us!</h4>
                                     <a href="https://twitter.com/averagejoecodi1" title="Twitter" target="_blank" rel="noopener noreferrer" style={{ fontSize: "24pt" }}><i className="fab fa-twitter"></i></a>
                                     <Form>
