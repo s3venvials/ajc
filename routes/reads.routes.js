@@ -1,4 +1,4 @@
-let readsModel = require("../models/reads");
+let readsModel = require("../models/reads.model");
 const multer = require("multer");
 const upload = multer();
 const fs = require("fs")
@@ -10,7 +10,7 @@ module.exports = (app) => {
     app.post("/api/reads/new", upload.single("file"), async (req, res) => {
         try {
 
-            const { file, body: { title, category, name, content }} = req;
+            const { file, body: { title, category, name, content, imageUrl }} = req;
             const fileName = name + file.detectedFileExtension;
             const imgPath = `/uploads/${fileName}`;
 
@@ -24,7 +24,8 @@ module.exports = (app) => {
                 title,
                 category: categories,
                 content,
-                imgPath
+                imgPath,
+                imageUrl
             }
 
             let read = new readsModel(reads);

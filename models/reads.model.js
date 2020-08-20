@@ -6,7 +6,8 @@ const Reads = new Schema({
     category: [],
     content: String,
     createdDate: { type: Date, default: new Date() },
-    imgPath: String
+    imgPath: String,
+    imageUrl: String
 });
 
 module.exports = mongoose.model('reads', Reads);

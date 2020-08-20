@@ -37,15 +37,15 @@ const CardReads = (props) => {
                                     <hr />
                                     
                                     {item.category.map((item, index) => {
-                                        return <Badge pill variant="info">{item}</Badge>
+                                        return <Badge key={index} pill variant="info">{item}</Badge>
                                     })
                                     }
                                     
-                                    <Card.Text>
+                                    <div>
                                     {
                                         ReactHtmlParser(`${item.content.slice(0, 100)}...`)
                                     }
-                                    </Card.Text>
+                                    </div>
                                     <Button href={`/reads/${item._id}/${item.title}`} variant="primary" size="sm">Read More</Button>
                                 </Card.Body>
                             </Card>

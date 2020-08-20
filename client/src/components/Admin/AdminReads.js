@@ -10,12 +10,14 @@ const AdminReads = () => {
     const [category, setCategory] = useState("");
     const [file, setFile] = useState();
     const [name, setName] = useState();
+    const [imageUrl, setImageUrl] = useState("");
 
     const handleChange = event => {
         const { name, value } = event.target;
         if (name === "title") setTitle(value);
         if (name === "content") setContent(value);
         if (name === "category") setCategory(value);
+        if (name === "imageUrl") setImageUrl(value);
     }
 
     const handleSubmit = async event => {
@@ -29,6 +31,7 @@ const AdminReads = () => {
             data.append("title", title);
             data.append("category", category);
             data.append("content", content);
+            data.append("imageUrl", imageUrl)
             let res = await axios.post("/api/reads/new", data, { withCredentials: true });
 
             setTitle("");
@@ -67,6 +70,10 @@ const AdminReads = () => {
                         const file = event.target.files[0];
                         setFile(file);
                     }} />
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Image URL</Form.Label>
+                    <Form.Control type="url" name="imageUrl" value={imageUrl} onChange={handleChange} />
                 </Form.Group>
                 <Row>
                     <Col lg={6}>

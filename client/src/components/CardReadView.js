@@ -41,13 +41,16 @@ const CardReadView = (props) => {
             {read.map((item, index) => {
                 return (
                     <div key={index}>
-                        {item.imgPath &&
-                            <Row>
-                                <Col lg={12}>
+                        <Row>
+                            <Col lg={12}>
+                                {item.imageUrl ?
+                                    <Image fluid src={`${item.imageUrl}`} alt="comic-strip" />
+                                    :
                                     <Image fluid src={`${item.imgPath}`} alt="comic-strip" />
-                                </Col>
-                            </Row>
-                        }
+                                }
+
+                            </Col>
+                        </Row>
 
                         {
                             ReactHtmlParser(item.content)
