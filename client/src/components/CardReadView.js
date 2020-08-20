@@ -24,7 +24,7 @@ const CardReadView = (props) => {
 
     return (
         <Container>
-            <Jumbotron>
+            <Jumbotron style={{ borderBottomLeftRadius: "25px", borderBottomRightRadius: "25px"}}>
                 {read.map((item, index) => {
                     return (
                         <div key={index}>
