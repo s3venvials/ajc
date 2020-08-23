@@ -26,8 +26,8 @@ const CardReads = (props) => {
             <Row>
                 {data.map((item, index) => {
                     return (
-                        <Col key={index} lg={4} style={{ marginBottom: '1em' }}>
-                            <Card style={{ width: '18rem', backgroundColor: '#eaeaea' }}>
+                        <Col key={index} lg={props.size} style={{ marginBottom: '1em' }}>
+                            <Card style={{ backgroundColor: '#eaeaea' }}>
                                 <Card.Body>
                                     {item.title ?
                                         <Card.Title>{item.title}</Card.Title>

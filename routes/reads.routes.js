@@ -11,13 +11,20 @@ module.exports = (app) => {
         try {
 
             const { file, body: { title, category, name, content, imageUrl }} = req;
-            const fileName = name + file.detectedFileExtension;
-            const imgPath = `/uploads/${fileName}`;
+            let fileName = "";
+            let imgPath = "";
 
-            await pipeline(
-                file.stream,
-                fs.createWriteStream(`${__dirname}/../client/public/uploads/${fileName}`)
-            )
+            if (file) {
+
+                 fileName = name + file.detectedFileExtension;
+
+                 await pipeline(
+                    file.stream,
+                    fs.createWriteStream(`${__dirname}/../client/public/uploads/${fileName}`)
+                )
+
+                imgPath = `/uploads/${fileName}`;
+            }
 
             let categories = category.split(",");
             let reads = {
@@ -34,6 +41,7 @@ module.exports = (app) => {
             return res.json({ message: "Reads was added successfully!" });
 
         } catch (error) {
+            console.log(error);
             res.status(500).json(error);
         }
     });

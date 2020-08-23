@@ -4,7 +4,8 @@ import { Container, Jumbotron, Row, Col, Image } from 'react-bootstrap';
 import ReactHtmlParser from 'react-html-parser';
 import Playground from './Playground';
 import Rating from './Rating';
-import Comments from './Comments';
+import CommentBox from './CommentBox';
+import Comments from "./Comments";
 
 const CardReadView = (props) => {
     const [read, setRead] = useState([]);
@@ -24,11 +25,11 @@ const CardReadView = (props) => {
 
     return (
         <Container>
-            <Jumbotron style={{ borderBottomLeftRadius: "25px", borderBottomRightRadius: "25px"}}>
+            <Jumbotron className="ReadsJumboTron" style={{ borderBottomRightRadius: "25px", borderBottomLeftRadius: "25px"}}>
                 {read.map((item, index) => {
                     return (
                         <div key={index}>
-                            <h1 style={{ textAlign: 'center' }}>{item.title}</h1>
+                            <h1 style={{ textAlign: 'center', color: 'orangered' }}>{item.title}</h1>
 
                             <p>
                                 {item.subTitle}
@@ -61,6 +62,7 @@ const CardReadView = (props) => {
 
             <Playground />
             <Rating />
+            <CommentBox />
             <Comments />
         </Container >
     )

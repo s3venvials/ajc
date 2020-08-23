@@ -16,3 +16,10 @@ code {
   font-family: Arial, monospace;
   font-size: 18px;
   }
+
+.ReadsJumboTron {
+  background-image: linear-gradient(to bottom, rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.9) 100%),
+  url("https://res.cloudinary.com/frontndev/image/upload/v1547328861/bg-image_mkcv7t.jpg");
+  background-position: center;
+  box-shadow: 10px 3px 12px #999999;
+}

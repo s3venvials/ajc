@@ -56,7 +56,7 @@ const HomePage = () => {
 
                 <Col lg={12} style={{ textAlign: 'center' }}>
                     <hr />
-                        <h3>Reads</h3>
+                        <h3>Random Reads</h3>
                     <hr />
                 </Col>
 
@@ -75,15 +75,7 @@ const HomePage = () => {
                     </Col>
                 </Row>
 
-                <CardReads postCount={postCount} isRandom={isRandom} />
-
-                {/* <hr /> */}
-
-                {/* <Col lg={12} style={{ textAlign: 'center' }}>
-                <h3>You Gonna Learn Today</h3>
-            </Col> */}
-
-                {/* <LearnCards /> */}
+                <CardReads postCount={postCount} isRandom={isRandom} size={4} />
             </Container>
         </Fragment>
     )
