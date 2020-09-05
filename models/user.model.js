@@ -11,6 +11,7 @@ let UserSchema = new Schema({
     createdDate: { type: Date, default: Date.now },
     resetPasswordToken: String,
     resetPasswordExpires: Date,
+    verified: { type: Boolean, default: false }
 });
 
 UserSchema.methods.setPassword = function (password) {

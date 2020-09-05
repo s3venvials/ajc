@@ -6,6 +6,7 @@ import 'codemirror/theme/neat.css';
 import './Editor.scss';
 require('codemirror/mode/css/css');
 require('codemirror/mode/javascript/javascript');
+require('codemirror/mode/python/python');
 
 export default class Editor extends Component {
   state = { value: this.props.code };

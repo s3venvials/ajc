@@ -65,12 +65,12 @@ export default class Playground extends Component {
         const fileNames = Object.keys(data.files);
         const gistHtml = fileNames.find(file => file.includes('.html'));
         const gistCss = fileNames.find(file => file.includes('.css'));
-        // const gistJs = fileNames.find(file => file.includes('.js'));
+        const gistJs = fileNames.find(file => file.includes('.js'));
 
         this.setTitle("Interactive Shell");
-        if (gistHtml) this.setHtml(data.files[gistHtml].content);
-        if (gistCss) this.setCss(data.files[gistCss].content);
-        // if (gistJs) this.setJs(data.files[gistJs].content);
+        // if (gistHtml) this.setHtml(data.files[gistHtml].content);
+        // if (gistCss) this.setCss(data.files[gistCss].content);
+        if (gistJs) this.setJs(data.files[gistJs].content);
       });
   };
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from "axios";
-import { Button, Modal, Nav, Form, ButtonGroup, ToggleButton } from 'react-bootstrap';
+import { Button, Modal, Nav, Form, ButtonGroup, ToggleButton, Alert, Spinner } from 'react-bootstrap';
 
 const AuthModal = () => {
     const [show, setShow] = useState(false);
@@ -11,9 +11,16 @@ const AuthModal = () => {
     const [confirmEmail, setConfirmEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [errMsgs, setErrMsgs] = useState([])
+    const [errMsg, setErrMsg] = useState([]);
+    const [successMsg, setSuccessMsg] = useState("");
+    const [spinner, showSpinner] = useState(false);
 
-    const handleClose = () => setShow(false);
+    const handleClose = () => { 
+        setErrMsg("");
+        setSuccessMsg("");
+        showSpinner(false);
+        setShow(false);
+     }
     const handleShow = () => setShow(true);
 
     const radios = [
@@ -23,33 +30,31 @@ const AuthModal = () => {
 
     const signUp = async (e) => {
         try {
+            setErrMsg("");
+            setSuccessMsg("");
             e.preventDefault();
-            let flag = true;
+            showSpinner(true);
             let data = { firstName, lastName, email, confirmEmail, password, confirmPassword };
-
-            for (const [key, value] of Object.entries(data)) {
-                if (!value) { 
-                    setErrMsgs(errMsgs.concat(`${key} is a required field`));
-                    flag = false;
-                }
+            let res = await axios.post("/api/user/signup", data);
+            if (res.data.Message) {
+                setFirstName("");
+                setLastName("");
+                setEmail("");
+                setConfirmEmail("");
+                setPassword("");
+                setConfirmPassword("");
+                setRadioValue("1");
+                setTimeout(() => { 
+                    setSuccessMsg(res.data.Message);
+                    showSpinner(false) 
+                }, 1500);
+            } else {
+                showSpinner(false);
+                setErrMsg(res.data.Error);
             }
 
-            if (email !== confirmEmail) { 
-                console.log("Emails do not match!"); 
-                flag = false;
-            }
-
-            if (password !== confirmPassword) {
-                console.log("Passwords do not match!"); 
-                flag = false;
-            }
-            
-            if (flag) {
-                console.log(data);
-                // let res = await axios.post("/api/user/signup", state);
-            }
-        } catch (error){
-            console.log(error);
+        } catch (error) {
+            setErrMsg(error);
         }
     }
 
@@ -123,9 +128,11 @@ const AuthModal = () => {
         <>
             <Nav.Link onClick={handleShow}>
                 <i className="fas fa-user-circle"></i> Log In/Sign Up
-            </Nav.Link>
+                </Nav.Link>
 
             <Modal show={show} onHide={handleClose}>
+                {successMsg && <Alert variant="success"><i className="fas fa-check-circle"></i> {successMsg}</Alert>}
+                {errMsg.length ? <Alert variant="danger"><i className="fas fa-times-circle"></i> {errMsg}</Alert> : null}
                 <Modal.Header closeButton>
                     <Modal.Title>
                         <ButtonGroup toggle>
@@ -146,41 +153,44 @@ const AuthModal = () => {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
-                        {radioValue === '1' ?
-                            <>
-                                {loginFields.map((item, index) => {
-                                    return (
-                                        <Form.Group key={index} controlId={item.id}>
-                                            <Form.Label>{item.label}</Form.Label>
-                                            <Form.Control type={item.type} placeholder={item.placeHolder} />
-                                        </Form.Group>
-                                    )
-                                })}
-
-                                <Form.Group>
-                                    <a href="/forgot_password">Forgot Password</a>
-                                </Form.Group>
-
-                                <Button variant="primary" type="submit">
-                                    Log In
-                                </Button>
-                            </>
+                    <Form onSubmit={signUp}>
+                        {spinner ?
+                            <Spinner animation="grow" variant="primary" />
                             :
-                            <>
-                                {signupFields.map((item) => {
-                                    return (
-                                        <Form.Group key={item.id} controlId={item.id}>
-                                            <Form.Label>{item.label}</Form.Label>
-                                            <Form.Control type={item.type} value={item.value} onChange={item.onChange} placeholder={item.placeHolder} />
-                                        </Form.Group>
-                                    )
-                                })}
+                            radioValue === '1' ?
+                                <>
+                                    {loginFields.map((item, index) => {
+                                        return (
+                                            <Form.Group key={index} controlId={item.id}>
+                                                <Form.Label>{item.label}</Form.Label>
+                                                <Form.Control type={item.type} placeholder={item.placeHolder} />
+                                            </Form.Group>
+                                        )
+                                    })}
 
-                                <Button variant="primary" type="submit" onClick={signUp}>
-                                    Sign Up
-                                </Button>
-                            </>
+                                    <Form.Group>
+                                        <a href="/forgot_password">Forgot Password</a>
+                                    </Form.Group>
+
+                                    <Button variant="primary" type="submit">
+                                        Log In
+                                    </Button>
+                                </>
+                                :
+                                <>
+                                    {signupFields.map((item) => {
+                                        return (
+                                            <Form.Group key={item.id} controlId={item.id}>
+                                                <Form.Label>{item.label}</Form.Label>
+                                                <Form.Control type={item.type} value={item.value} onChange={item.onChange} placeholder={item.placeHolder} />
+                                            </Form.Group>
+                                        )
+                                    })}
+
+                                    <Button variant="primary" type="submit" onClick={signUp}>
+                                        Sign Up
+                                    </Button>
+                                </>
                         }
                     </Form>
                 </Modal.Body>

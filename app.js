@@ -14,6 +14,7 @@ app.use("/uploads", express.static("uploads"));
 
 require("./routes/test.routes")(app);
 require("./routes/reads.routes")(app);
+require("./routes/user.routes")(app);
 
 if (process.env.NODE_ENV === 'production') {
     // Express will serve up production assets
