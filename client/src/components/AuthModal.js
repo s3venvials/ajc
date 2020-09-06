@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useGlobal } from 'reactn';
 import axios from "axios";
 import { Button, Modal, Nav, Form, ButtonGroup, ToggleButton, Alert, Spinner } from 'react-bootstrap';
 
-const AuthModal = () => {
+const AuthModal = (props) => {
+    const [, setGlobal] = useGlobal();
     const [show, setShow] = useState(false);
     const [radioValue, setRadioValue] = useState('1');
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
+    const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [confirmEmail, setConfirmEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -52,8 +54,37 @@ const AuthModal = () => {
                 showSpinner(false);
                 setErrMsg(res.data.Error);
             }
-
         } catch (error) {
+            setErrMsg(error);
+        }
+    }
+
+    const isLoggedIn = (isAuth) => props.isLoggedIn(isAuth);
+
+    const signIn = async (e) => {
+        try {
+            setErrMsg("");
+            setSuccessMsg("");
+            e.preventDefault();
+            showSpinner(true);
+            let data = { username, password };
+            let res = await axios.post("/api/user/signin", data, { withCredentials: true });
+            if (res.data.User) {
+                setUsername("");
+                setPassword("");
+                setGlobal({ currentUser: res.data.User });
+                localStorage.setItem("sessionId", res.data.User.sessionId);
+                setTimeout(() => {
+                    showSpinner(false);
+                    setShow(false);
+                    isLoggedIn(true);
+                }, 1500);
+            } else {
+                showSpinner(false);
+                setErrMsg(res.data.Error);
+            }
+        } catch (error) {
+            console.log(error)
             setErrMsg(error);
         }
     }
@@ -63,13 +94,17 @@ const AuthModal = () => {
             id: "formBasicUsername",
             label: "Email address",
             type: "email",
-            placeHolder: "Enter Email"
+            placeHolder: "Enter Email",
+            value: username,
+            onChange: (e) => setUsername(e.target.value)
         },
         {
             controlId: "formBasicPassword",
             label: "Password",
             type: "password",
-            placeHolder: "Password"
+            placeHolder: "Enter Password",
+            value: password,
+            onChange: (e) => setPassword(e.target.value)
         }
     ];
 
@@ -153,7 +188,7 @@ const AuthModal = () => {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form onSubmit={signUp}>
+                    <Form onSubmit={radioValue === '1' ? signIn : signUp}>
                         {spinner ?
                             <Spinner animation="grow" variant="primary" />
                             :
@@ -163,7 +198,7 @@ const AuthModal = () => {
                                         return (
                                             <Form.Group key={index} controlId={item.id}>
                                                 <Form.Label>{item.label}</Form.Label>
-                                                <Form.Control type={item.type} placeholder={item.placeHolder} />
+                                                <Form.Control type={item.type} value={item.value} onChange={item.onChange} placeholder={item.placeHolder} />
                                             </Form.Group>
                                         )
                                     })}
@@ -172,7 +207,7 @@ const AuthModal = () => {
                                         <a href="/forgot_password">Forgot Password</a>
                                     </Form.Group>
 
-                                    <Button variant="primary" type="submit">
+                                    <Button variant="primary" type="submit" onClick={signIn}>
                                         Log In
                                     </Button>
                                 </>
