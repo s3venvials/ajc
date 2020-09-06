@@ -63,8 +63,8 @@ export default class Playground extends Component {
       .then(data => {
         // find the first .html, .css, .js files and apply them as the content
         const fileNames = Object.keys(data.files);
-        const gistHtml = fileNames.find(file => file.includes('.html'));
-        const gistCss = fileNames.find(file => file.includes('.css'));
+        // const gistHtml = fileNames.find(file => file.includes('.html'));
+        // const gistCss = fileNames.find(file => file.includes('.css'));
         const gistJs = fileNames.find(file => file.includes('.js'));
 
         this.setTitle("Interactive Shell");

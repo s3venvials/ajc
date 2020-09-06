@@ -5,10 +5,8 @@ let keys = require("../../config/keys");
 let sendEmailConfirmation = async (sender, recipient) => {
     try {
         let response = await sendEmail(keys.nodeMailer.transport, verifyEmailTemplate(sender, recipient));
-        console.log(response);
         return response;
     } catch (error) {
-        console.log(error);
         return error;
     }
 }

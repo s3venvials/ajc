@@ -11,7 +11,8 @@ let UserSchema = new Schema({
     createdDate: { type: Date, default: Date.now },
     resetPasswordToken: String,
     resetPasswordExpires: Date,
-    verified: { type: Boolean, default: false }
+    verified: { type: Boolean, default: false },
+    sessionId: String
 });
 
 UserSchema.methods.setPassword = function (password) {
@@ -24,6 +25,6 @@ UserSchema.statics.validatePassword = function (password, _hash) {
     return hash;
 };
 
-const User = mongoose.model('User', UserSchema);
+const UserModel = mongoose.model('User', UserSchema);
 
-module.exports = { User };
+module.exports = { UserModel };

@@ -30,7 +30,7 @@ const Header = () => {
 
     const signOut = async () => {
         try {
-            let res = await axios.get(`/api/user/signout?sessionId=${localStorage.sessionId}`, { withCredentials: true });
+            await axios.get(`/api/user/signout?sessionId=${localStorage.sessionId}`, { withCredentials: true });
             setIsSignedIn(false);
             localStorage.clear();
         } catch (error) {

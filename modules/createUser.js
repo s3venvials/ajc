@@ -1,12 +1,13 @@
 let bcrypt = require("bcryptjs");
-let userModel = require("../models/user.model").User;
+let { UserModel } = require("../models/user.model");
 
 /**
  * 
  * @param {Object} userParam - req.body from user registration 
  * @returns {Object} response object - { Message, User, Error }
  */
-let createUser = async (userParam) => {
+const createUser = async (userParam) => {
+
     let response = { Message: null, User: null, Error: null };
     let { firstName, lastName, email, confirmEmail, password, confirmPassword } = userParam;
 
@@ -26,7 +27,7 @@ let createUser = async (userParam) => {
     }
 
     try {
-        let users = await userModel.find({});
+        let users = await UserModel.find({});
 
         for (let i = 0; i < users.length; i++) {
             if (bcrypt.compareSync(email.toLowerCase(), users[i].username)) {
@@ -35,7 +36,7 @@ let createUser = async (userParam) => {
             }
         }
 
-        let newUser = new userModel(userParam);
+        let newUser = new UserModel(userParam);
 
         //Save user
         newUser.username = bcrypt.hashSync(email.toLowerCase());

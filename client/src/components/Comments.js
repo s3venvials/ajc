@@ -29,7 +29,7 @@ const Comments = () => {
             {
                 comments.map((item, index) => {
                     return (
-                        <Card style={{ marginTop: "1em" }}>
+                        <Card key={index} style={{ marginTop: "1em" }}>
                             <Card.Header>
                                 <Row>
                                     <Col lg={6} xs={7}>                                      
