@@ -8,37 +8,44 @@ const Header = () => {
     const [signedIn, setIsSignedIn] = useState(false);
     const [displayName, setDisplayName] = useState("");
 
-    const isAuthed = (isAuth) => { setIsSignedIn(isAuth) };
+    const isSignedIn = (isAuth) => setIsSignedIn(isAuth);
 
     useEffect(() => {
         let getUser = async () => {
             try {
-                if (localStorage.sessionId) {
-                    let res = await axios.get(`/api/user/current?sessionId=${localStorage.sessionId}`, { withCredentials: true });
-                    if (res.data.User) {
-                        setIsSignedIn(true);
-                        setDisplayName(`Hello, ${res.data.User[0].firstName} ${res.data.User[0].lastName}`);
-                    }
+                let res = await axios.get(`/api/user/current?sessionId=${sessionStorage.sessionId}`, { withCredentials: true });
+              
+                if (res.data.User) {
+                    setDisplayName(`Hello, ${res.data.User[0].firstName} ${res.data.User[0].lastName}`);
+                    setIsSignedIn(true);
                 }
             } catch (error) {
-                setIsSignedIn(false);
                 console.log(error);
+                setIsSignedIn(false);
             }
         }
+
         getUser();
-    }, [signedIn, displayName]);
+
+        return () => {
+            if (sessionStorage.sessionId) {
+                getUser();
+            }
+        }
+    });
 
     const signOut = async () => {
         try {
-            await axios.get(`/api/user/signout?sessionId=${localStorage.sessionId}`, { withCredentials: true });
+            await axios.get(`/api/user/signout?sessionId=${sessionStorage.sessionId}`, { withCredentials: true });
             setIsSignedIn(false);
-            localStorage.clear();
+            setDisplayName("");
+            sessionStorage.clear();
         } catch (error) {
             setIsSignedIn(false);
-            console.log(error);
+
         }
     }
-
+    
     return (
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
             <Container>
@@ -54,15 +61,15 @@ const Header = () => {
                     <Nav>
                         {
                             signedIn ?
-                            <>
-                                <Nav.Link href="/">{displayName}</Nav.Link>
-                                <Button onClick={signOut} size="sm" variant="outline-light"><i className="fas fa-sign-out-alt"></i> Sign Out</Button>
-                            </>
-                            
-                            :
-                            <AuthModal isLoggedIn={isAuthed}/>
+                                <>
+                                    <Nav.Link href="/">{displayName}</Nav.Link>
+                                    <Button onClick={signOut} size="sm" variant="outline-light"><i className="fas fa-sign-out-alt"></i> Sign Out</Button>
+                                </>
+
+                                :
+                                <AuthModal isAuthorized={isSignedIn} />
                         }
-                        
+
                     </Nav>
                 </Navbar.Collapse>
             </Container>

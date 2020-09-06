@@ -1,14 +1,14 @@
-import React, { useState, useGlobal } from 'reactn';
+import React, { useState } from 'react';
 import axios from "axios";
 import { Button, Modal, Nav, Form, ButtonGroup, ToggleButton, Alert, Spinner } from 'react-bootstrap';
 
 const AuthModal = (props) => {
-    const [, setGlobal] = useGlobal();
     const [show, setShow] = useState(false);
     const [radioValue, setRadioValue] = useState('1');
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [username, setUsername] = useState("");
+    const [pass, setPass] = useState("");
     const [email, setEmail] = useState("");
     const [confirmEmail, setConfirmEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -59,7 +59,7 @@ const AuthModal = (props) => {
         }
     }
 
-    const isLoggedIn = (isAuth) => props.isLoggedIn(isAuth);
+    const isSignedIn = (isAuth) => props.isAuthorized(isAuth);
 
     const signIn = async (e) => {
         try {
@@ -67,18 +67,17 @@ const AuthModal = (props) => {
             setSuccessMsg("");
             e.preventDefault();
             showSpinner(true);
-            let data = { username, password };
+
+            let data = { username, password: pass };
             let res = await axios.post("/api/user/signin", data, { withCredentials: true });
+           
             if (res.data.User) {
                 setUsername("");
-                setPassword("");
-                setGlobal({ currentUser: res.data.User });
-                localStorage.setItem("sessionId", res.data.User.sessionId);
-                setTimeout(() => {
-                    showSpinner(false);
-                    setShow(false);
-                    isLoggedIn(true);
-                }, 1500);
+                setPass("");
+                sessionStorage.setItem("sessionId", res.data.SessionId);
+                showSpinner(false);
+                setShow(false);
+                isSignedIn(true);
             } else {
                 showSpinner(false);
                 setErrMsg(res.data.Error);
@@ -103,8 +102,8 @@ const AuthModal = (props) => {
             label: "Password",
             type: "password",
             placeHolder: "Enter Password",
-            value: password,
-            onChange: (e) => setPassword(e.target.value)
+            value: pass,
+            onChange: (e) => setPass(e.target.value)
         }
     ];
 
