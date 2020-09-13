@@ -1,4 +1,4 @@
-const { createUser, loginUser, getUser, logoutUser, sendEmailConfirmation } = require("../modules");
+const { createUser, loginUser, getUser, logoutUser, sendEmailConfirmation, createSub } = require("../modules");
 const keys = require("../config/keys");
 
 module.exports = (app) => {
@@ -44,4 +44,14 @@ module.exports = (app) => {
     app.get("/api/user/verify", (req, res) => {
         res.json("Test success");
     });
+
+    app.post("/api/user/subscribe", async (req, res) => {
+        try {
+            const { email } = req.body;
+            let response = await createSub(email);
+            return res.json(response);
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    })
 }

@@ -16,6 +16,7 @@ const AuthModal = (props) => {
     const [errMsg, setErrMsg] = useState([]);
     const [successMsg, setSuccessMsg] = useState("");
     const [spinner, showSpinner] = useState(false);
+    const [isSubscribed, setIsSubscribed] = useState(true);
 
     const handleClose = () => { 
         setErrMsg("");
@@ -36,7 +37,7 @@ const AuthModal = (props) => {
             setSuccessMsg("");
             e.preventDefault();
             showSpinner(true);
-            let data = { firstName, lastName, email, confirmEmail, password, confirmPassword };
+            let data = { firstName, lastName, email, confirmEmail, password, confirmPassword, isSubscribed };
             let res = await axios.post("/api/user/signup", data);
             if (res.data.Message) {
                 setFirstName("");
@@ -46,6 +47,7 @@ const AuthModal = (props) => {
                 setPassword("");
                 setConfirmPassword("");
                 setRadioValue("1");
+                setIsSubscribed(true);
                 setTimeout(() => { 
                     setSuccessMsg(res.data.Message);
                     showSpinner(false) 
@@ -155,6 +157,13 @@ const AuthModal = (props) => {
             placeHolder: "Confirm Password",
             value: confirmPassword,
             onChange: (e) => setConfirmPassword(e.target.value)
+        },
+        {
+            id: "formBasicSubcribCheckBox",
+            label: "Subscribe",
+            type: "checkbox",
+            checked: isSubscribed,
+            onChange: (e) => setIsSubscribed(e.target.checked)
         }
     ];
 
@@ -215,8 +224,14 @@ const AuthModal = (props) => {
                                     {signupFields.map((item) => {
                                         return (
                                             <Form.Group key={item.id} controlId={item.id}>
-                                                <Form.Label>{item.label}</Form.Label>
-                                                <Form.Control type={item.type} value={item.value} onChange={item.onChange} placeholder={item.placeHolder} />
+                                                {item.type === "checkbox" ?
+                                                    <Form.Check type={item.type} label={item.label} checked={item.checked} onChange={item.onChange} />
+                                                :
+                                                <>
+                                                    <Form.Label>{item.label}</Form.Label>
+                                                    <Form.Control type={item.type} value={item.value} onChange={item.onChange} placeholder={item.placeHolder} />
+                                                </>
+                                                }
                                             </Form.Group>
                                         )
                                     })}

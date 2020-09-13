@@ -1,5 +1,7 @@
-let bcrypt = require("bcryptjs");
-let { UserModel } = require("../models/user.model");
+const bcrypt = require("bcryptjs");
+const { UserModel } = require("../models/user.model");
+const { createSub } = require("./createSub");
+const { SubModel } = require("../models/subs.model");
 
 /**
  * 
@@ -9,7 +11,7 @@ let { UserModel } = require("../models/user.model");
 const createUser = async (userParam) => {
 
     let response = { Message: null, User: null, Error: null };
-    let { firstName, lastName, email, confirmEmail, password, confirmPassword } = userParam;
+    let { firstName, lastName, email, confirmEmail, password, confirmPassword, isSubscribed } = userParam;
 
     if (!firstName || !lastName || !email || !confirmEmail || !password || !confirmPassword) {
         response.Error = "All fields are required!";
@@ -36,6 +38,15 @@ const createUser = async (userParam) => {
             }
         }
 
+        //If user subscribes before creating an account.
+        let subs = await SubModel.find({});
+        for (let i = 0; i < subs.length; i++) {
+            if (bcrypt.compareSync(email.toLowerCase(), subs[i].email)) {
+                userParam.isSubscribed = true;
+            }
+        }
+
+
         let newUser = new UserModel(userParam);
 
         //Save user
@@ -45,6 +56,8 @@ const createUser = async (userParam) => {
 
         response.User = newUser;
         response.Message = "Sign up successful!";
+
+        if (isSubscribed) await createSub(email);
 
         return response;
 

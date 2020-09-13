@@ -1,7 +1,8 @@
 import React, { useState, Fragment } from 'react';
+import axios from "axios";
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import Button from 'react-bootstrap/Button';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Alert, Spinner } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import CardReads from './CardReads';
 import Image from 'react-bootstrap/Image';
@@ -9,10 +10,33 @@ import Image from 'react-bootstrap/Image';
 const HomePage = () => {
     const [postCount, setPostCount] = useState(3);
     const [isRandom, setisRandom] = useState(0);
+    const [email, setEmail] = useState("");
+    const [resMsg, setResMsg] = useState("");
+    const [spinner, showSpinner] = useState(false);
 
     const handleChange = (event) => {
         setisRandom(0);
         setPostCount(event.target.value);
+    }
+
+    const handleSub = async e => {
+        try {
+            e.preventDefault();
+            setResMsg("");
+            if (email) showSpinner(true);
+            let res = await axios.post("/api/user/subscribe", { email }, { withCredentials: true });
+            if (res.data) {
+                setTimeout(() => { 
+                    setEmail("");
+                    setResMsg(res.data.Message);
+                    showSpinner(false); 
+                }, 600);
+            }
+
+        } catch (error){
+            setResMsg("");
+            showSpinner(false);
+        }
     }
 
     return (
@@ -38,12 +62,17 @@ const HomePage = () => {
                                 <div>
                                     <h4>Follow Us!</h4>
                                     <a href="https://twitter.com/averagejoecodi1" title="Twitter" target="_blank" rel="noopener noreferrer" style={{ fontSize: "24pt" }}><i className="fab fa-twitter"></i></a>
-                                    <Form>
+                                    <Form onSubmit={handleSub}>
                                         <Form.Group controlId="email">
                                             <Form.Label><h5>Subscribe</h5></Form.Label>
-                                            <Form.Control type="email" name="email" placeholder="Enter Email" />
+                                            {resMsg && <Alert variant="info">{resMsg}</Alert> }
+                                            <Form.Control type="email" name="email" value={email} onChange={(e) => setEmail(e.target.value) } placeholder="Enter Email" />
                                         </Form.Group>
-                                        <Button variant="primary"><i className="far fa-paper-plane"> Submit</i></Button>
+                                        {spinner ?
+                                         <Button><Spinner animation="grow" size="sm" role="status" as="span"></Spinner></Button>
+                                         :
+                                         <Button type="submit" variant="primary"><i className="far fa-paper-plane"> Submit</i></Button>
+                                        }
                                     </Form>
                                 </div>
                             </Col>

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const bcrypt = require("bcryptjs");
 
-let UserSchema = new Schema({
+const UserSchema = new Schema({
     username: { type: String },
     hash: { type: String },
     salt: { type: String },
@@ -12,7 +12,8 @@ let UserSchema = new Schema({
     resetPasswordToken: String,
     resetPasswordExpires: Date,
     verified: { type: Boolean, default: false },
-    sessionId: String
+    sessionId: String,
+    isSubscribed: { type: Boolean, default: false }
 });
 
 UserSchema.methods.setPassword = function (password) {
