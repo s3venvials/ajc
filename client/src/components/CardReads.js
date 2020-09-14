@@ -14,10 +14,8 @@ const CardReads = (props) => {
         let getAllReads = async () => {
             try {
                 let res = await axios.post("/api/reads/count", { postCount: props.postCount, isRandom: props.isRandom });
-                setData([...res.data]);
-            } catch (error) {
-                console.log(error);
-            }
+                if (res.data) setData([...res.data]);
+            } catch {}
         }
         getAllReads();
     }, [props.postCount, props.isRandom]);
@@ -26,6 +24,7 @@ const CardReads = (props) => {
         return (
             <Row>
                 {data.map((item, index) => {
+                   
                     return (
                         <Col key={index} lg={props.size} style={{ marginBottom: '1em' }}>
                             <Card style={{ backgroundColor: '#eaeaea' }}>
@@ -37,9 +36,11 @@ const CardReads = (props) => {
                                     }
                                     <hr />
                                     
-                                    {item.category.map((item, index) => {
+                                    {
+                                        item.category.map((item, index) => {
                                         return <Badge key={index} pill variant="info">{item}</Badge>
                                     })
+                                   
                                     }
                                     
                                     <div>
