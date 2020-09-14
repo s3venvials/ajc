@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import AuthModal from './AuthModal';
-import { Navbar, Nav, Container, Button } from 'react-bootstrap';
+import { Navbar, Nav, Container, Button, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 import { history } from "../helpers";
 
 const Header = () => {
     const [signedIn, setIsSignedIn] = useState(false);
     const [displayName, setDisplayName] = useState("");
+    const [spinner, showSpinner] = useState(false);
 
     const isSignedIn = (isAuth) => setIsSignedIn(isAuth);
 
@@ -36,10 +37,14 @@ const Header = () => {
 
     const signOut = async () => {
         try {
+            showSpinner(true);
             await axios.get(`/api/user/signout?sessionId=${sessionStorage.sessionId}`, { withCredentials: true });
             setIsSignedIn(false);
             setDisplayName("");
             sessionStorage.clear();
+            setInterval(() => {
+                showSpinner(false);
+            }, 1600);
         } catch (error) {
             setIsSignedIn(false);
 
@@ -67,7 +72,12 @@ const Header = () => {
                                 </>
 
                                 :
-                                <AuthModal isAuthorized={isSignedIn} />
+
+                                spinner ?
+                                    <Button variant="outline-light"><Spinner animation="border" size="sm" role="status"></Spinner> Signing Out...</Button>
+                                    :
+                                    <AuthModal isAuthorized={isSignedIn} />
+                                
                         }
 
                     </Nav>

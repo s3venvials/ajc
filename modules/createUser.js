@@ -55,7 +55,7 @@ const createUser = async (userParam) => {
         await newUser.save();
 
         response.User = newUser;
-        response.Message = "Sign up successful!";
+        response.Message = "Sign up successful! Please check your email to verify your account.";
 
         if (isSubscribed) await createSub(email);
 

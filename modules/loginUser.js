@@ -31,6 +31,11 @@ const loginUser = async (user) => {
             return response;
         }
 
+        if (!_user.verified) {
+            response.Error = false;
+            return response;
+        }
+
         let sessionId = _user.sessionId;
 
         if (!sessionId) {

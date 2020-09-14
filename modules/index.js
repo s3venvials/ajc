@@ -4,6 +4,7 @@ const { getUser } = require("./getUser");
 const { logoutUser } = require("./logoutUser");
 const { sendEmailConfirmation } = require("./email/index");
 const { createSub } = require("./createSub");
+const { verifyEmail } = require("./verifyEmail");
 
 module.exports = {
     createUser,
@@ -11,5 +12,6 @@ module.exports = {
     getUser,
     logoutUser,
     sendEmailConfirmation,
-    createSub
+    createSub,
+    verifyEmail
 }

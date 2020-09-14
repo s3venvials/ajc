@@ -15,14 +15,29 @@ const AuthModal = (props) => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [errMsg, setErrMsg] = useState([]);
     const [successMsg, setSuccessMsg] = useState("");
-    const [spinner, showSpinner] = useState(false);
+    const [signinSpinner, showSigninSpinner] = useState(false);
+    const [signupSpinner, showSignupSpinner] = useState(false);
     const [isSubscribed, setIsSubscribed] = useState(true);
+    const [verifyLink, showVerifyLink] = useState(false);
+    const [verifyLinkSuccess, showVerifyLinkSuccess] = useState(false);
 
     const handleClose = () => { 
         setErrMsg("");
         setSuccessMsg("");
-        showSpinner(false);
+        showSignupSpinner(false);
+        showSigninSpinner(false);
         setShow(false);
+        showVerifyLink(false);
+        showVerifyLinkSuccess(false);
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setConfirmEmail("");
+        setPassword("");
+        setConfirmPassword("");
+        setIsSubscribed(true);
+        setUsername("");
+        setPass("");
      }
     const handleShow = () => setShow(true);
 
@@ -36,7 +51,10 @@ const AuthModal = (props) => {
             setErrMsg("");
             setSuccessMsg("");
             e.preventDefault();
-            showSpinner(true);
+            showSignupSpinner(true);
+            showVerifyLink(false);
+            showVerifyLinkSuccess(false);
+            
             let data = { firstName, lastName, email, confirmEmail, password, confirmPassword, isSubscribed };
             let res = await axios.post("/api/user/signup", data);
             if (res.data.Message) {
@@ -46,17 +64,18 @@ const AuthModal = (props) => {
                 setConfirmEmail("");
                 setPassword("");
                 setConfirmPassword("");
-                setRadioValue("1");
                 setIsSubscribed(true);
                 setTimeout(() => { 
                     setSuccessMsg(res.data.Message);
-                    showSpinner(false) 
+                    showSignupSpinner(false);
+                    setRadioValue("1");
                 }, 1500);
             } else {
-                showSpinner(false);
+                showSignupSpinner(false);
                 setErrMsg(res.data.Error);
             }
         } catch (error) {
+            showSignupSpinner(false);
             setErrMsg(error);
         }
     }
@@ -68,24 +87,30 @@ const AuthModal = (props) => {
             setErrMsg("");
             setSuccessMsg("");
             e.preventDefault();
-            showSpinner(true);
+            showSigninSpinner(true);
+            showVerifyLink(false);
+            showVerifyLinkSuccess(false);
 
             let data = { username, password: pass };
             let res = await axios.post("/api/user/signin", data, { withCredentials: true });
-           
             if (res.data.User) {
                 setUsername("");
                 setPass("");
                 sessionStorage.setItem("sessionId", res.data.SessionId);
-                showSpinner(false);
+                showSigninSpinner(false);
                 setShow(false);
                 isSignedIn(true);
             } else {
-                showSpinner(false);
-                setErrMsg(res.data.Error);
+                showSigninSpinner(false);
+                if (!res.data.Error) {
+                    showVerifyLink(true);
+                } else {
+                    setErrMsg(res.data.Error);
+                }
+                
             }
         } catch (error) {
-            console.log(error)
+            showSigninSpinner(false);
             setErrMsg(error);
         }
     }
@@ -167,6 +192,16 @@ const AuthModal = (props) => {
         }
     ];
 
+    const sendVerifyEmail = async () => {
+        try {
+            showVerifyLink(false);
+            let res = await axios.post("/api/user/email_verification", { email: username }, { withCredentials: true });
+            if (res.data === "Done") showVerifyLinkSuccess(true);
+        } catch (error) {
+            showVerifyLinkSuccess(false);
+        }
+    }
+
     return (
         <>
             <Nav.Link onClick={handleShow}>
@@ -175,7 +210,11 @@ const AuthModal = (props) => {
 
             <Modal show={show} onHide={handleClose}>
                 {successMsg && <Alert variant="success"><i className="fas fa-check-circle"></i> {successMsg}</Alert>}
+                {verifyLinkSuccess && <Alert variant="success"><i className="fas fa-check-circle"></i> Email verification was successfully sent to {username}.</Alert>}
                 {errMsg.length ? <Alert variant="danger"><i className="fas fa-times-circle"></i> {errMsg}</Alert> : null}
+                {verifyLink && <Alert variant="info"> <i className="fas fa-info-circle"></i> Email has not been verified. 
+                    <Button size="sm" variant="primary" onClick={sendVerifyEmail}> Send Email Verification</Button> to {username}
+                    </Alert>}
                 <Modal.Header closeButton>
                     <Modal.Title>
                         <ButtonGroup toggle>
@@ -197,10 +236,7 @@ const AuthModal = (props) => {
                 </Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={radioValue === '1' ? signIn : signUp}>
-                        {spinner ?
-                            <Spinner animation="grow" variant="primary" />
-                            :
-                            radioValue === '1' ?
+                        {radioValue === '1' ?
                                 <>
                                     {loginFields.map((item, index) => {
                                         return (
@@ -214,10 +250,13 @@ const AuthModal = (props) => {
                                     <Form.Group>
                                         <a href="/forgot_password">Forgot Password</a>
                                     </Form.Group>
-
-                                    <Button variant="primary" type="submit" onClick={signIn}>
-                                        Log In
-                                    </Button>
+                                    
+                                    {signinSpinner ?
+                                        <Button variant="primary"><Spinner size="sm" animation="border"></Spinner> Logging In...</Button>
+                                        :
+                                        <Button variant="primary" type="submit" onClick={signIn}>Log In</Button>
+                                    }
+                                    
                                 </>
                                 :
                                 <>
@@ -236,9 +275,12 @@ const AuthModal = (props) => {
                                         )
                                     })}
 
-                                    <Button variant="primary" type="submit" onClick={signUp}>
-                                        Sign Up
-                                    </Button>
+                                    {signupSpinner ?
+                                    <Button variant="primary"><Spinner size="sm" animation="border"></Spinner> Signing Up...</Button>
+                                    :
+                                    <Button variant="primary" type="submit" onClick={signUp}>Sign Up</Button>
+                                    }
+                                    
                                 </>
                         }
                     </Form>

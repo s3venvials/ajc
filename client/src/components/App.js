@@ -9,6 +9,7 @@ import DonatePage from './DonatePage';
 import ShopPage from './ShopPage';
 import AdminReads from './Admin/AdminReads';
 import CardReadView from './CardReadView';
+import VerifyEmail from './VerifyEmail';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
       <Route path="/Shop" component={ShopPage} />
       <Route path="/reads/:id/:title" component={CardReadView} />
       <Route path="/:id/admin/reads" component={AdminReads} />
+      <Route path="/verify_email/:id" component={VerifyEmail} />
       <Footer />
     </Router>
   );

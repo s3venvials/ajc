@@ -65,11 +65,11 @@ const HomePage = () => {
                                     <Form onSubmit={handleSub}>
                                         <Form.Group controlId="email">
                                             <Form.Label><h5>Subscribe</h5></Form.Label>
-                                            {resMsg && <Alert variant="info">{resMsg}</Alert> }
+                                            {resMsg && <Alert variant="info"><i className="fas fa-info-circle"></i> {resMsg}</Alert> }
                                             <Form.Control type="email" name="email" value={email} onChange={(e) => setEmail(e.target.value) } placeholder="Enter Email" />
                                         </Form.Group>
                                         {spinner ?
-                                         <Button><Spinner animation="grow" size="sm" role="status" as="span"></Spinner></Button>
+                                         <Button><Spinner animation="border" size="sm" role="status" as="span"></Spinner> Submitting...</Button>
                                          :
                                          <Button type="submit" variant="primary"><i className="far fa-paper-plane"> Submit</i></Button>
                                         }
