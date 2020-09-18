@@ -1,14 +1,33 @@
 let nodemailer = require("nodemailer");
 
 const sendEmail = (protocol, message) => {
-    return new Promise((resolve, reject) => {
-      nodemailer.createTransport(protocol).sendMail(message, (err) => {
-        if (err) reject(err);
-        resolve("Done");
-      });
+  return new Promise((resolve, reject) => {
+    nodemailer.createTransport(protocol).sendMail(message, (err) => {
+      if (err) reject(err);
+      resolve("Done");
     });
+  });
+}
+
+const generateId = (length = 8, numbers = true, alpha = true) => {
+  let text = "";
+  let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  if (!numbers && alpha) {
+    possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+  } else if (numbers && !alpha) {
+    possible = "0123456789";
   }
 
-  module.exports = {
-      sendEmail
+  for (let i = 0; i < length; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
   }
+
+  return text;
+}
+
+module.exports = {
+  sendEmail,
+  generateId
+}
