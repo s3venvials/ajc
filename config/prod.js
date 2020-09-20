@@ -4,5 +4,6 @@ module.exports = {
     corsOptions: process.env.CORS_OPTIONS,
     redirectDomain: process.env.REDIRECT_DOMAIN,
     nodeMailer: process.env.NODE_MAILER,
-    hostURI: process.env.HOST_URI
+    hostURI: process.env.HOST_URI,
+    emailSender: process.env.EMAIL_SENDER
 };

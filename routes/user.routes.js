@@ -56,7 +56,7 @@ module.exports = (app) => {
                 }
             }
             
-            let response = await sendEmailConfirmation(keys.nodeMailer.sender, email, id);
+            let response = await sendEmailConfirmation(keys.emailSender, email, id);
             return res.json(response);
         } catch (error) {
             res.status(500).json(error);
