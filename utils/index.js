@@ -8,7 +8,7 @@ const sendEmail = (message) => {
       host: 'smtp.gmail.com',
       port: 465,
       secure: true,
-      auth: keys.emailAuth,
+      auth: process.env.EMAIL_AUTH,
     }).sendMail(message, (err) => {
       if (err) reject(err);
       resolve("Done");
