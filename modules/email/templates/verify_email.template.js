@@ -9,7 +9,7 @@ let verifyEmailTemplate = (sender, recipient, id) => {
             <div>
                    
                     <p>Please click on the following link to verify and confirm your email address with AverageJoeCoding.com.</p>
-                    <a href="${keys.hostURI.URL}/verify_email/${id}" id="confirmEmailLink">Confirm Email!</a>
+                    <a href="${keys.hostURI}/verify_email/${id}" id="confirmEmailLink">Confirm Email!</a>
                     <br />
                     <br />
                     <small>AJC | Phoenix, AZ 85004</small>
