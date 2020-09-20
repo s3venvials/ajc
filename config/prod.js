@@ -3,5 +3,6 @@ module.exports = {
     cookieKey: process.env.COOKIE_KEY,
     corsOptions: process.env.CORS_OPTIONS,
     redirectDomain: process.env.REDIRECT_DOMAIN,
-    nodeMailer: process.env.NODE_MAILER
+    nodeMailer: process.env.NODE_MAILER,
+    hostURI: process.env.HOST_URI
 };
