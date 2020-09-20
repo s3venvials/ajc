@@ -7,8 +7,10 @@ const { logErrors } = require("../../modules");
 let sendEmailConfirmation = async (sender, recipient, id) => {
     try {
         let response = await sendEmail(keys.nodeMailer.transport, verifyEmailTemplate(sender, recipient, id));
+        console.log(response);
         return response;
     } catch (error) {
+        console.log(error);
         await logErrors(error);
         return error;
     }
