@@ -5,5 +5,6 @@ module.exports = {
     redirectDomain: process.env.REDIRECT_DOMAIN,
     nodeMailer: process.env.NODE_MAILER,
     hostURI: process.env.HOST_URI,
-    emailSender: process.env.EMAIL_SENDER
+    emailSender: process.env.EMAIL_SENDER,
+    emailAuth: process.env.EMAIL_AUTH
 };

@@ -7,7 +7,7 @@ module.exports = (app) => {
     app.post("/api/user/signup", async (req, res) => {
         try {
             let response = await createUser(req.body);
-            if (response.User) await sendEmailConfirmation(keys.nodeMailer.sender, req.body.email, response.User._id);
+            if (response.User) await sendEmailConfirmation(keys.emailSender, req.body.email, response.User._id);
             return res.json(response);
         } catch (error) {
             res.status(500).json(error);
