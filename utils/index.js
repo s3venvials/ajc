@@ -1,6 +1,7 @@
 let nodemailer = require("nodemailer");
 
 const sendEmail = (protocol, message) => {
+  console.log(protocol, message);
   return new Promise((resolve, reject) => {
     nodemailer.createTransport(protocol).sendMail(message, (err) => {
       if (err) reject(err);
