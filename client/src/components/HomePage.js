@@ -104,7 +104,7 @@ const HomePage = () => {
                     </Col>
                 </Row>
 
-                <CardReads postCount={postCount} isRandom={isRandom} size={4} />
+                <CardReads postCount={postCount} isRandom={isRandom} size={4} searchValue={[]} />
             </Container>
         </Fragment>
     )
