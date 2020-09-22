@@ -6,6 +6,7 @@ import { Container, Row, Col, Alert, Spinner } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import CardReads from './CardReads';
 import Image from 'react-bootstrap/Image';
+import SubscribePopover from './SubscribePopover';
 
 const HomePage = () => {
     const [postCount, setPostCount] = useState(3);
@@ -64,7 +65,11 @@ const HomePage = () => {
                                     <a href="https://twitter.com/averagejoecodi1" title="Twitter" target="_blank" rel="noopener noreferrer" style={{ fontSize: "24pt" }}><i className="fab fa-twitter"></i></a>
                                     <Form onSubmit={handleSub}>
                                         <Form.Group controlId="email">
-                                            <Form.Label><h5>Subscribe</h5></Form.Label>
+                                            <Row>
+                                                <Col xl={2} lg={3} xs={3}><Form.Label><h5>Subscribe</h5></Form.Label></Col>
+                                                <Col lg={6} xs={4}><SubscribePopover /></Col>
+                                            </Row>
+                                            
                                             {resMsg && <Alert variant="info"><i className="fas fa-info-circle"></i> {resMsg}</Alert> }
                                             <Form.Control type="email" name="email" value={email} onChange={(e) => setEmail(e.target.value) } placeholder="Enter Email" />
                                         </Form.Group>

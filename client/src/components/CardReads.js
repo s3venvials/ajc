@@ -5,7 +5,6 @@ import { Row, Col } from 'react-bootstrap';
 import Badge from 'react-bootstrap/Badge';
 import Button from 'react-bootstrap/Button';
 import ReactHtmlParser from 'react-html-parser';
-import { history } from "../helpers";
 
 const CardReads = (props) => {
     const [data, setData] = useState([]);
@@ -83,7 +82,7 @@ const CardReads = (props) => {
                                             ReactHtmlParser(`${item.content.slice(0, 100)}...`)
                                         }
                                     </div>
-                                    <Button onClick={() => history.push(`/reads/${item._id}/${item.title}`)} variant="primary" size="sm">Read More</Button>
+                                    <Button onClick={() => window.location = `/reads/${item._id}/${item.title}`} variant="primary" size="sm">Read More</Button>
                                 </Card.Body>
                             </Card>
                         </Col>
