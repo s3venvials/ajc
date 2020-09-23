@@ -23,11 +23,11 @@ const loginUser = async (user) => {
 
         if (foundUser) {
             if (!UserModel.validatePassword(password, _user.hash)) {
-                response.Error = "Invalid password";
+                response.Error = "401 Unauthorized";
                 return response;
             }
         } else {
-            response.Error = "Provided username not found.";
+            response.Error = "401 Unauthorized";
             return response;
         }
 
