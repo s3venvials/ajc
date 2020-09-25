@@ -1,6 +1,6 @@
 const keys = require("../../../config/keys");
 
-let verifyEmailTemplate = (sender, recipient, id) => {
+const verifyEmailNotification = (sender, recipient, id) => {
     return {
         to: recipient,
         from: sender,
@@ -18,4 +18,4 @@ let verifyEmailTemplate = (sender, recipient, id) => {
     };
 }
 
-module.exports = { verifyEmailTemplate };
+module.exports = { verifyEmailNotification };

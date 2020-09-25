@@ -1,17 +1,16 @@
-const bcrypt = require("bcryptjs");
 const { UserModel } = require("../models/user.model");
 const { createSub } = require("./createSub");
 const { SubModel } = require("../models/subs.model");
 
 /**
- * 
+ * Helper function to create a user.
  * @param {Object} userParam - req.body from user registration 
- * @returns {Object} response object - { Message, User, Error }
+ * @returns {Promise.<Response: { Message: String, default is null, Error: String, default is null, User: Created User, default is null }>}
  */
 const createUser = async (userParam) => {
 
     let response = { Message: null, User: null, Error: null };
-    let { firstName, lastName, email, confirmEmail, password, confirmPassword, isSubscribed } = userParam;
+    const { firstName, lastName, email, confirmEmail, password, confirmPassword, isSubscribed } = userParam;
 
     if (!firstName || !lastName || !email || !confirmEmail || !password || !confirmPassword) {
         response.Error = "All fields are required!";
@@ -29,28 +28,28 @@ const createUser = async (userParam) => {
     }
 
     try {
-        let users = await UserModel.find({});
+        const users = await UserModel.find({});
 
         for (let i = 0; i < users.length; i++) {
-            if (bcrypt.compareSync(email.toLowerCase(), users[i].username)) {
+            if (email.toLowerCase() === users[i].username.toLowerCase()) {
                 response.Error = ("The provided email has already been registered.");
                 return response;
             }
         }
 
         //If user subscribes before creating an account.
-        let subs = await SubModel.find({});
+        const subs = await SubModel.find({});
         for (let i = 0; i < subs.length; i++) {
-            if (bcrypt.compareSync(email.toLowerCase(), subs[i].email)) {
+            if (email.toLowerCase() === subs[i].email.toLowerCase()) {
                 userParam.isSubscribed = true;
             }
         }
 
 
-        let newUser = new UserModel(userParam);
+        const newUser = new UserModel(userParam);
 
         //Save user
-        newUser.username = bcrypt.hashSync(email.toLowerCase());
+        newUser.username = email;
         await newUser.setPassword(password);
         await newUser.save();
 

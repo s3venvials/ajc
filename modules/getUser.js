@@ -1,5 +1,11 @@
 const { UserModel } = require("../models/user.model");
 
+/**
+ * Helper function to return a user based on their session id
+ * @param {String} sessionId
+ * @returns {Promise.<Response: { Error: String, default is null, User: found user object, default is null } >}
+ * On error returns a catched error.
+ */
 const getUser = async (sessionId) => {
 
     let response = { Error: null, User: null };

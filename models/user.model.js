@@ -8,7 +8,7 @@ const UserSchema = new Schema({
     salt: { type: String },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    createdDate: { type: Date, default: Date.now },
+    createdAt: { type: Date, default: new Date() },
     resetPasswordToken: String,
     resetPasswordExpires: Date,
     verified: { type: Boolean, default: false },
@@ -25,6 +25,8 @@ UserSchema.statics.validatePassword = function (password, _hash) {
     const hash = bcrypt.compareSync(password, _hash);
     return hash;
 };
+
+
 
 const UserModel = mongoose.model('User', UserSchema);
 

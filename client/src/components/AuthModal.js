@@ -87,6 +87,7 @@ const AuthModal = (props) => {
                     setPassword("");
                     setConfirmPassword("");
                     setIsSubscribed(true);
+                    setSignupValidated(false);
                 }, 1500);
             } else {
                 showSignupSpinner(false);

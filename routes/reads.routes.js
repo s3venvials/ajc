@@ -4,7 +4,16 @@ const upload = multer();
 const fs = require("fs")
 const { promisify } = require("util");
 const pipeline = promisify(require("stream").pipeline);
+const { SubModel } = require("../models/subs.model");
+const { sendEmail } = require("../utils");
+const { newReadsNotification } = require("../modules/email/templates");
+const keys = require("../config/keys");
+const bcrypt = require("bcryptjs");
 
+/**
+ * Reads API
+ * @param {import("express").Express} app 
+ */
 module.exports = (app) => {
 
     app.post("/api/reads/new", upload.single("file"), async (req, res) => {
@@ -13,6 +22,7 @@ module.exports = (app) => {
             const { file, body: { title, category, name, content, imageUrl }} = req;
             let fileName = "";
             let imgPath = "";
+            const subs = await SubModel.find({});
 
             if (file) {
 
@@ -38,9 +48,15 @@ module.exports = (app) => {
             let read = new readsModel(reads);
             await read.save();
 
+            for (let i = 0; i < subs.length; i++) {
+                //Send out email to all subscribed users about the new reads post.
+                await sendEmail(newReadsNotification(keys.emailSender, subs[i].email, read._id, title));
+            }
+
             return res.json({ message: "Reads was added successfully!" });
 
         } catch (error) {
+            console.log(error)
             res.status(500).json(error);
         }
     });

@@ -1,13 +1,19 @@
-const { createUser, loginUser, getUser, logoutUser, sendEmailConfirmation, createSub, verifyEmail } = require("../modules");
+const { createUser, loginUser, getUser, logoutUser, createSub, verifyEmail } = require("../modules");
+const { sendEmail } = require("../utils");
 const keys = require("../config/keys");
+const { verifyEmailNotification } = require("../modules/email/templates");
 const { UserModel } = require("../models/user.model");
 const bcrypt = require("bcryptjs")
 
+/**
+ * User API
+ * @param {import("express").Express} app 
+ */
 module.exports = (app) => {
     app.post("/api/user/signup", async (req, res) => {
         try {
             let response = await createUser(req.body);
-            if (response.User) await sendEmailConfirmation(keys.emailSender, req.body.email, response.User._id);
+            if (response.User) await sendEmail(verifyEmailNotification(keys.emailSender, req.body.email, response.User._id));
             return res.json(response);
         } catch (error) {
             res.status(500).json(error);
@@ -56,7 +62,7 @@ module.exports = (app) => {
                 }
             }
             
-            let response = await sendEmailConfirmation(keys.emailSender, email, id);
+            let response = await sendEmail(verifyEmailNotification(keys.emailSender, email, id));
             return res.json(response);
         } catch (error) {
             res.status(500).json(error);
