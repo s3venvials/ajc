@@ -11,9 +11,10 @@ const UserSchema = new Schema({
     createdAt: { type: Date, default: new Date() },
     resetPasswordToken: String,
     resetPasswordExpires: Date,
-    verified: { type: Boolean, default: false },
+    isVerified: { type: Boolean, default: false },
     sessionId: String,
-    isSubscribed: { type: Boolean, default: false }
+    isSubscribed: { type: Boolean, default: false },
+    passCode: String
 });
 
 UserSchema.methods.setPassword = function (password) {
@@ -25,8 +26,6 @@ UserSchema.statics.validatePassword = function (password, _hash) {
     const hash = bcrypt.compareSync(password, _hash);
     return hash;
 };
-
-
 
 const UserModel = mongoose.model('User', UserSchema);
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from "axios";
-import { Button, Modal, Nav, Form, ButtonGroup, ToggleButton, Alert, Spinner, Row, Col } from 'react-bootstrap';
-import SubscribePopover from "./SubscribePopover";
+import { Button, Modal, Nav, Form, ButtonGroup, ToggleButton, Alert, Spinner } from 'react-bootstrap';
+import ConfirmPassCode from "./ConfirmPassCode";
 
 const AuthModal = (props) => {
     const [show, setShow] = useState(false);
@@ -18,11 +18,11 @@ const AuthModal = (props) => {
     const [successMsg, setSuccessMsg] = useState("");
     const [signinSpinner, showSigninSpinner] = useState(false);
     const [signupSpinner, showSignupSpinner] = useState(false);
-    const [isSubscribed, setIsSubscribed] = useState(true);
     const [verifyLink, showVerifyLink] = useState(false);
     const [verifyLinkSuccess, showVerifyLinkSuccess] = useState(false);
     const [loginValidated, setLoginValidated] = useState(false);
     const [signupValidated, setSignupValidated] = useState(false);
+    const [showPassCodeField, setPassCodeField] = useState(false);
 
     const handleClose = () => {
         setErrMsg("");
@@ -38,9 +38,9 @@ const AuthModal = (props) => {
         setConfirmEmail("");
         setPassword("");
         setConfirmPassword("");
-        setIsSubscribed(true);
         setUsername("");
         setPass("");
+        setPassCodeField(false);
     }
     const handleShow = () => setShow(true);
 
@@ -58,6 +58,7 @@ const AuthModal = (props) => {
             showSignupSpinner(true);
             showVerifyLink(false);
             showVerifyLinkSuccess(false);
+            setPassCodeField(false);
 
             if (!firstName || !lastName || !email || !confirmEmail || !password || !confirmPassword) {
                 showSignupSpinner(false);
@@ -73,7 +74,7 @@ const AuthModal = (props) => {
                 return;
             }
 
-            let data = { firstName, lastName, email, confirmEmail, password, confirmPassword, isSubscribed };
+            let data = { firstName, lastName, email, confirmEmail, password, confirmPassword };
             let res = await axios.post("/api/user/signup", data);
             if (res.data.Message) {
                 setTimeout(() => {
@@ -86,10 +87,11 @@ const AuthModal = (props) => {
                     setConfirmEmail("");
                     setPassword("");
                     setConfirmPassword("");
-                    setIsSubscribed(true);
                     setSignupValidated(false);
+                    setPassCodeField(true);
                 }, 1500);
             } else {
+                setPassCodeField(false);
                 showSignupSpinner(false);
                 setErrMsg(res.data.Error);
                 setSignupValidated(false);
@@ -98,6 +100,7 @@ const AuthModal = (props) => {
             showSignupSpinner(false);
             setErrMsg(error);
             setSignupValidated(false);
+            showPassCodeField(false);
         }
     }
 
@@ -130,6 +133,7 @@ const AuthModal = (props) => {
             } else {
                 showSigninSpinner(false);
                 if (!res.data.Error) {
+                    setPassCodeField(true);
                     showVerifyLink(true);
                 } else {
                     setLoginValidated(false);
@@ -219,18 +223,10 @@ const AuthModal = (props) => {
             value: confirmPassword,
             onChange: (e) => setConfirmPassword(e.target.value),
             invalid: "Please confirm your password."
-        },
-        {
-            id: "formBasicSubcribCheckBox",
-            label: "Subscribe",
-            type: "checkbox",
-            checked: isSubscribed,
-            onChange: (e) => setIsSubscribed(e.target.checked),
-            addOn: <SubscribePopover />
         }
     ];
 
-    const sendVerifyEmail = async () => {
+    const sendNewPassCode = async () => {
         try {
             showVerifyLink(false);
             let res = await axios.post("/api/user/email_verification", { email: username }, { withCredentials: true });
@@ -238,6 +234,13 @@ const AuthModal = (props) => {
         } catch (error) {
             showVerifyLinkSuccess(false);
         }
+    }
+
+    const receivePassCodeConfirmation = (value) => {
+        setPassCodeField(value);
+        showVerifyLink(false);
+        showVerifyLinkSuccess(false);
+        setSuccessMsg("Your email has been successfully verified!");
     }
 
     return (
@@ -248,10 +251,12 @@ const AuthModal = (props) => {
 
             <Modal show={show} onHide={handleClose}>
                 {successMsg && <Alert variant="success"><i className="fas fa-check-circle"></i> {successMsg}</Alert>}
-                {verifyLinkSuccess && <Alert variant="success"><i className="fas fa-check-circle"></i> Email verification was successfully sent to {username}.</Alert>}
+                {verifyLinkSuccess && <Alert variant="success"><i className="fas fa-check-circle"></i> A new pass code was successfully sent to {username}.</Alert>}
                 {errMsg.length ? <Alert variant="danger"><i className="fas fa-times-circle"></i> {errMsg}</Alert> : null}
-                {verifyLink && <Alert variant="info"> <i className="fas fa-info-circle"></i> Email has not been verified.
-                    <Button size="sm" variant="primary" onClick={sendVerifyEmail}> Send Email Verification</Button> to {username}
+                {verifyLink && <Alert variant="info"> <i className="fas fa-info-circle"></i> The following Email has not been verified. Please provide the pass code we sent to you upon
+                    registration. If you no longer have the pass code or did not receive one, click on the following to send a new pass code.
+                    <br />
+                    <Button variant="outline-primary" size="sm" onClick={sendNewPassCode}> Send pass code</Button> to {username}
                 </Alert>}
                 <Modal.Header closeButton>
                     <Modal.Title>
@@ -273,65 +278,59 @@ const AuthModal = (props) => {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form noValidate validated={radioValue === '1' ? loginValidated : signupValidated} onSubmit={radioValue === '1' ? signIn : signUp}>
-                        {radioValue === '1' ?
-                            <>
-                                {loginFields.map((item, index) => {
-                                    return (
-                                        <Form.Group key={index} controlId={item.id}>
-                                            <Form.Label>{item.label}</Form.Label>
-                                            <Form.Control type={item.type} value={item.value} onChange={item.onChange} placeholder={item.placeHolder} required />
-                                            <Form.Control.Feedback type="invalid">
-                                                {item.invalid}
-                                            </Form.Control.Feedback>
-                                        </Form.Group>
-                                    )
-                                })}
+                    {showPassCodeField ?
+                        <ConfirmPassCode receivePassCodeConfirm={receivePassCodeConfirmation} />
+                        :
+                        <Form noValidate validated={radioValue === '1' ? loginValidated : signupValidated} onSubmit={radioValue === '1' ? signIn : signUp}>
+                            {radioValue === '1' ?
+                                <>
+                                    {loginFields.map((item, index) => {
+                                        return (
+                                            <Form.Group key={index} controlId={item.id}>
+                                                <Form.Label>{item.label}</Form.Label>
+                                                <Form.Control type={item.type} value={item.value} onChange={item.onChange} placeholder={item.placeHolder} required />
+                                                <Form.Control.Feedback type="invalid">
+                                                    {item.invalid}
+                                                </Form.Control.Feedback>
+                                            </Form.Group>
+                                        )
+                                    })}
 
-                                <Form.Group>
-                                    <a href="/forgot_password">Forgot Password</a>
-                                </Form.Group>
+                                    <Form.Group>
+                                        <a href="/forgot_password">Forgot Password</a>
+                                    </Form.Group>
 
-                                {signinSpinner ?
-                                    <Button variant="primary"><Spinner size="sm" animation="border"></Spinner> Logging In...</Button>
-                                    :
-                                    <Button variant="primary" type="submit" onClick={signIn}>Log In</Button>
-                                }
+                                    {signinSpinner ?
+                                        <Button variant="primary"><Spinner size="sm" animation="border"></Spinner> Logging In...</Button>
+                                        :
+                                        <Button variant="primary" type="submit" onClick={signIn}>Log In</Button>
+                                    }
 
-                            </>
-                            :
-                            <>
-                                {signupFields.map((item) => {
-                                    return (
-                                        <Form.Group key={item.id} controlId={item.id}>
-                                            {item.type === "checkbox" ?
-                                                <Row>
-                                                    <Col lg={3} xs={3}><Form.Check type={item.type} label={item.label} checked={item.checked} onChange={item.onChange} /></Col>
-                                                    <Col lg={6} xs={4}>{item.addOn}</Col>
-                                                </Row>
+                                </>
+                                :
+                                <>
+                                    {signupFields.map((item) => {
+                                        return (
+                                            <Form.Group key={item.id} controlId={item.id}>
+                                                <Form.Label>{item.label}</Form.Label>
+                                                <Form.Control type={item.type} value={item.value} onChange={item.onChange} placeholder={item.placeHolder} required />
+                                                <Form.Control.Feedback type="invalid">
+                                                    {item.invalid}
+                                                </Form.Control.Feedback>
+                                            </Form.Group>
+                                        )
+                                    })}
 
-                                                :
-                                                <>
-                                                    <Form.Label>{item.label}</Form.Label>
-                                                    <Form.Control type={item.type} value={item.value} onChange={item.onChange} placeholder={item.placeHolder} required />
-                                                    <Form.Control.Feedback type="invalid">
-                                                        {item.invalid}
-                                                    </Form.Control.Feedback>
-                                                </>
-                                            }
-                                        </Form.Group>
-                                    )
-                                })}
+                                    {signupSpinner ?
+                                        <Button variant="primary"><Spinner size="sm" animation="border"></Spinner> Signing Up...</Button>
+                                        :
+                                        <Button variant="primary" type="submit" onClick={signUp}>Sign Up</Button>
+                                    }
 
-                                {signupSpinner ?
-                                    <Button variant="primary"><Spinner size="sm" animation="border"></Spinner> Signing Up...</Button>
-                                    :
-                                    <Button variant="primary" type="submit" onClick={signUp}>Sign Up</Button>
-                                }
-
-                            </>
-                        }
-                    </Form>
+                                </>
+                            }
+                        </Form>
+                    }
                 </Modal.Body>
             </Modal>
         </>

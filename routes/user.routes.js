@@ -1,9 +1,9 @@
-const { createUser, loginUser, getUser, logoutUser, createSub, verifyEmail } = require("../modules");
+const { createUser, loginUser, getUser, logoutUser, createSub } = require("../modules");
 const { sendEmail } = require("../utils");
 const keys = require("../config/keys");
 const { verifyEmailNotification } = require("../modules/email/templates");
 const { UserModel } = require("../models/user.model");
-const bcrypt = require("bcryptjs")
+const { generateId } = require("../utils"); 
 
 /**
  * User API
@@ -12,8 +12,9 @@ const bcrypt = require("bcryptjs")
 module.exports = (app) => {
     app.post("/api/user/signup", async (req, res) => {
         try {
-            let response = await createUser(req.body);
-            if (response.User) await sendEmail(verifyEmailNotification(keys.emailSender, req.body.email, response.User._id));
+            const passCode = generateId(6).toUpperCase();
+            let response = await createUser(req.body, passCode);
+            if (response.User) await sendEmail(verifyEmailNotification(keys.emailSender, req.body.email, passCode));
             return res.json(response);
         } catch (error) {
             res.status(500).json(error);
@@ -52,27 +53,32 @@ module.exports = (app) => {
     app.post("/api/user/email_verification", async (req, res) => {
         try {
             const { email } = req.body;
+            const passCode = generateId(6).toUpperCase();
             const users = await UserModel.find({});
-            let id;
+            let response;
 
             for (let i = 0; i < users.length; i++) {
-                if (bcrypt.compareSync(email.toLowerCase(), users[i].username)) {
-                    id = users[i]._id;
+                if (email.toLowerCase(), users[i].username) {
+                    await UserModel.updateOne({ _id: users[i]._id }, { passCode });
+                    response = await sendEmail(verifyEmailNotification(keys.emailSender, email, passCode));
                     break;
                 }
             }
-            
-            let response = await sendEmail(verifyEmailNotification(keys.emailSender, email, id));
+        
             return res.json(response);
         } catch (error) {
             res.status(500).json(error);
         }
     })
 
-    app.get("/api/user/verify_email", async (req, res) => {
+    app.post("/api/user/verify_email", async (req, res) => {
+        let response = { Message: null, Error: null };
+
         try {
-            const { id } = req.query;
-            let response = await verifyEmail(id);
+            const { passCode } = req.body;
+            await UserModel.updateOne({ passCode }, { isVerified: true });
+            let updateRes = await UserModel.updateOne({ passCode }, { passCode: "" });
+            updateRes.nModified === 1 ? response.Message = true : response.Error = "The provided pass code does not exist."; 
             return res.json(response);
         } catch (error) {
             res.status(500).json(error);
@@ -82,8 +88,8 @@ module.exports = (app) => {
     app.post("/api/user/subscribe", async (req, res) => {
         try {
             const { email } = req.body;
-            let response = await createSub(email);
-            return res.json(response);
+            const createSubRes = await createSub(email);
+            return res.json(createSubRes);
         } catch (error) {
             res.status(500).json(error);
         }

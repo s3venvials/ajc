@@ -3,7 +3,6 @@ import { Button } from "react-bootstrap";
 import Editor from './Editor';
 import Browser from './Browser';
 import Console from './Console';
-import './Playground.scss';
 
 /**
  * Separating to its own component cuz divitis

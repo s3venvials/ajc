@@ -1,6 +1,6 @@
 const keys = require("../../../config/keys");
 
-const verifyEmailNotification = (sender, recipient, id) => {
+const verifyEmailNotification = (sender, recipient, passCode) => {
     return {
         to: recipient,
         from: sender,
@@ -8,8 +8,8 @@ const verifyEmailNotification = (sender, recipient, id) => {
         html: `
             <div>
                    
-                    <p>Please click on the following link to verify and confirm your email address with AverageJoeCoding.com.</p>
-                    <a href="${keys.hostURI}/verify_email/${id}" id="confirmEmailLink">Confirm Email!</a>
+                    <p>Please copy and paste the pass code below to verify your account.</p>
+                    <h4>${passCode}</h4>
                     <br />
                     <br />
                     <small>AJC | Phoenix, AZ 85004</small>

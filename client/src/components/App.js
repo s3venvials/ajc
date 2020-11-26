@@ -11,6 +11,7 @@ import AdminReads from './Admin/AdminReads';
 import CardReadView from './CardReadView';
 import VerifyEmail from './VerifyEmail';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
 
 function App() {
   return (

@@ -4,7 +4,8 @@ const { ObjectID } = require('mongodb');
 
 const subSchema = new Schema({
     userId: { type: ObjectID },
-    email: String
+    email: String,
+    isVerified: { type: Boolean, default: false }
 });
 
 const SubModel = mongoose.model("Sub", subSchema);

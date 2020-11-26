@@ -1,69 +1,76 @@
-import React, { useEffect, useState } from 'react';
-import AuthModal from './AuthModal';
-import { Navbar, Nav, Container, Button, Spinner } from 'react-bootstrap';
-import axios from 'axios';
+import React from "react"; //{ useEffect, useState }
+// import AuthModal from './AuthModal';
+import { Navbar, Nav, Container } from "react-bootstrap"; // Button, Spinner
+// import axios from "axios";
 import { history } from "../helpers";
 
 const Header = () => {
-    const [signedIn, setIsSignedIn] = useState(false);
-    const [displayName, setDisplayName] = useState("");
-    const [spinner, showSpinner] = useState(false);
+  //   const [signedIn, setIsSignedIn] = useState(false);
+  //   const [displayName, setDisplayName] = useState("");
+  //   const [spinner, showSpinner] = useState(false);
 
-    const isSignedIn = (isAuth) => setIsSignedIn(isAuth);
+  //   const isSignedIn = (isAuth) => setIsSignedIn(isAuth);
 
-    useEffect(() => {
-        let getUser = async () => {
-            try {
-                let res = await axios.get(`/api/user/current?sessionId=${sessionStorage.sessionId}`, { withCredentials: true });
-              
-                if (res.data.User) {
-                    setDisplayName(`Hello, ${res.data.User[0].firstName} ${res.data.User[0].lastName}`);
-                    setIsSignedIn(true);
-                }
-            } catch (error) {
-                console.log(error);
-                setIsSignedIn(false);
-            }
-        }
+  //   useEffect(() => {
+  //     let getUser = async () => {
+  //       try {
+  //         let res = await axios.get(
+  //           `/api/user/current?sessionId=${sessionStorage.sessionId}`,
+  //           { withCredentials: true }
+  //         );
 
-        getUser();
+  //         if (res.data.User) {
+  //           setDisplayName(
+  //             `Hello, ${res.data.User[0].firstName} ${res.data.User[0].lastName}`
+  //           );
+  //           setIsSignedIn(true);
+  //         }
+  //       } catch (error) {
+  //         console.log(error);
+  //         setIsSignedIn(false);
+  //       }
+  //     };
 
-        return () => {
-            if (sessionStorage.sessionId) {
-                getUser();
-            }
-        }
-    });
+  //     getUser();
 
-    const signOut = async () => {
-        try {
-            showSpinner(true);
-            await axios.get(`/api/user/signout?sessionId=${sessionStorage.sessionId}`, { withCredentials: true });
-            setIsSignedIn(false);
-            setDisplayName("");
-            sessionStorage.clear();
-            setInterval(() => {
-                showSpinner(false);
-            }, 1600);
-        } catch (error) {
-            setIsSignedIn(false);
+  //     return () => {
+  //       if (sessionStorage.sessionId) {
+  //         getUser();
+  //       }
+  //     };
+  //   });
 
-        }
-    }
-    
-    return (
-        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-            <Container>
-                <Navbar.Brand onClick={() => history.push("/")}>AJC</Navbar.Brand>
-                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                <Navbar.Collapse id="responsive-navbar-nav">
-                    <Nav className="mr-auto">
-                        <Nav.Link onClick={() => history.push("/")}>Home</Nav.Link>
-                        <Nav.Link onClick={() => history.push("/reads")}>Reads</Nav.Link>
-                        <Nav.Link onClick={() => history.push("/donate")}>Donate</Nav.Link>
-                        <Nav.Link onClick={() => history.push("/shop")}>Shop</Nav.Link>
-                    </Nav>
-                    <Nav>
+  //   const signOut = async () => {
+  //     try {
+  //       showSpinner(true);
+  //       await axios.get(
+  //         `/api/user/signout?sessionId=${sessionStorage.sessionId}`,
+  //         { withCredentials: true }
+  //       );
+  //       setIsSignedIn(false);
+  //       setDisplayName("");
+  //       sessionStorage.clear();
+  //       setInterval(() => {
+  //         showSpinner(false);
+  //       }, 1600);
+  //     } catch (error) {
+  //       setIsSignedIn(false);
+  //     }
+  //   };
+
+  return (
+    <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+      <Container>
+        <Navbar.Brand onClick={() => history.push("/")}>AJC</Navbar.Brand>
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Nav className="mr-auto">
+            <Nav.Link onClick={() => history.push("/")}>Home</Nav.Link>
+            <Nav.Link onClick={() => history.push("/reads")}>Reads</Nav.Link>
+            <Nav.Link onClick={() => history.push("/donate")}>Donate</Nav.Link>
+            <Nav.Link onClick={() => history.push("/shop")}>Shop</Nav.Link>
+          </Nav>
+          {/* <Nav>
                         {
                             signedIn ?
                                 <>
@@ -80,11 +87,11 @@ const Header = () => {
                                 
                         }
 
-                    </Nav>
-                </Navbar.Collapse>
-            </Container>
-        </Navbar>
-    );
-}
+                    </Nav> */}
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
+  );
+};
 
 export default Header;

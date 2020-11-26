@@ -1,0 +1,103 @@
+.playground-console-container {
+  position: relative;
+}
+
+.playground-console {
+  background: #2f333d;
+  border-radius: 5px;
+  border-top: 30px solid #000000;
+  width: 100%;
+  padding: 10px 20px;
+  color: #dfe1e8;
+  font-family: "Source Code Pro", monospace;
+  height: 250px;
+  max-height: 250px;
+  overflow-y: scroll;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  margin-bottom: 0 !important;
+}
+
+li.console-line {
+  line-height: 1.8;
+}
+
+span.console-carrot {
+  color: #bada55;
+  display: inline-block;
+  margin-right: 3px;
+}
+
+.clearbtn {
+  position: absolute;
+  right: 15px;
+  bottom: 10px;
+}
+
+/* pre tag scrollbars */
+.playground-console::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 5px rgba(42, 42, 42, 0.5);
+  box-shadow: inset 0 0 5px rgba(42, 42, 42, 0.5);
+  background-color: lighten(#333, 10%);
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.playground-console::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background-color: lighten(#333, 10%);
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.playground-console::-webkit-scrollbar-thumb {
+  background-color: #111;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.playground-editor {
+  position: relative;
+  width: 100%;
+}
+
+.CodeMirror {
+  border-radius: 5px;
+  height: 230px;
+}
+
+pre {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+  margin: 0 !important;
+  margin-bottom: 0 !important;
+  margin-top: 0 !important;
+  background: none !important;
+}
+
+.playground {
+  margin-bottom: 35px;
+  font-size: 14px;
+  padding: 15px;
+  background: radial-gradient(at top left, #eeeeee, #858585);
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.title {
+  font-size: 18px !important;
+  margin-bottom: 12px !important;
+}
+
+.playground-content .column {
+  display: flex;
+}
+
+.playground-editor {
+  margin-bottom: 10px;
+}

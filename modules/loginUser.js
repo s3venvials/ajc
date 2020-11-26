@@ -35,7 +35,7 @@ const loginUser = async (user) => {
             return response;
         }
 
-        if (!_user.verified) {
+        if (!_user.isVerified) {
             response.Error = false;
             return response;
         }

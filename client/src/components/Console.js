@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import { Button } from "react-bootstrap";
-import './Console.scss';
 
 export default function Console({ history, clearHistory }) {
   const scrollDiv = useRef(null);
@@ -66,7 +65,7 @@ export default function Console({ history, clearHistory }) {
         <Button
           variant="light"
           onClick={clearHistory}
-          className="button is-white is-outlined is-small"
+          className="clearbtn"
         >
           Clear
         </Button>
