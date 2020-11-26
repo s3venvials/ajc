@@ -11,7 +11,7 @@ const popover = (
   );
   
   const SubscribePopover = () => (
-    <OverlayTrigger trigger="hover" placement="top" overlay={popover}>
+    <OverlayTrigger placement="top" overlay={popover}>
       <i className="fas fa-info-circle"></i>
     </OverlayTrigger>
   );

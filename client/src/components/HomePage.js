@@ -14,6 +14,7 @@ const HomePage = () => {
   const [isRandom, setisRandom] = useState(0);
   const [email, setEmail] = useState("");
   const [resMsg, setResMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
   const [spinner, showSpinner] = useState(false);
   const [showPassCodeField, setPassCodeField] = useState(false);
 
@@ -27,23 +28,25 @@ const HomePage = () => {
       setPassCodeField(false);
       e.preventDefault();
       setResMsg("");
-      if (email) showSpinner(true);
+      if (!email) return;
+      showSpinner(true);
+
       let res = await axios.post(
         "/api/user/subscribe",
         { email },
         { withCredentials: true }
       );
 
-      if (res.data.isVerified) {
+      if (!res.data.isSubscribed) {
         setTimeout(() => {
           setEmail("");
           setResMsg(res.data.Message);
           showSpinner(false);
+          setPassCodeField(true);
         }, 600);
       } else {
         showSpinner(false);
         setResMsg(res.data.Message);
-        setPassCodeField(true);
       }
     } catch (error) {
       setResMsg("");
@@ -52,8 +55,9 @@ const HomePage = () => {
   };
 
   const receivePassCodeConfirmation = (value) => {
-    setPassCodeField(value);
-    setResMsg("Your email has been successfully verified!");
+    setPassCodeField(value.showPassCodeField);
+    setResMsg("");
+    setSuccessMsg(value.Message);
   };
 
   return (
@@ -95,11 +99,9 @@ const HomePage = () => {
                     <i className="fab fa-twitter"></i>
                   </a>
 
-                  {resMsg && (
-                    <Alert variant="info">
-                      <i className="fas fa-info-circle"></i> {resMsg}
-                    </Alert>
-                  )}
+                  {resMsg && <Alert variant="info"> <i className="fas fa-info-circle"></i> {resMsg}</Alert> }
+
+                  {successMsg && <Alert variant="success"> <i className="fas fa-check"></i> {successMsg}</Alert>}
 
                   {showPassCodeField ? (
                     <ConfirmPassCode

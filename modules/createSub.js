@@ -1,5 +1,4 @@
 const { SubModel } = require("../models/subs.model");
-const { UserModel } = require("../models/user.model");
 const { verifyEmailNotification } = require("../modules/email/templates");
 const { sendEmail } = require("../utils");
 const keys = require("../config/keys");
@@ -8,11 +7,11 @@ const { generateId } = require("../utils");
 /**
  * Helper function to add a user's email to the subscribe collection.
  * @param {String} email
- * @returns { Promise.<Boolean> } true if email was subscribed, otherwise false.
+ * @returns { Promise.<{Message: (String|null), Error: (String|null), isSubscribed: Boolean}> }
  */
 const createSub = async (email) => {
 
-    let response = { Message: null, Error: null };
+    let response = { Message: null, Error: null, isSubscribed: false };
 
     try {
 
@@ -26,47 +25,30 @@ const createSub = async (email) => {
         }
 
         const subs = await SubModel.find({});
+        const passCode = generateId(6).toUpperCase();
 
         for (let i = 0; i < subs.length; i++) {
-            if (email.toLowerCase() === subs[i].email.toLowerCase()) {
+            if (email.toLowerCase() === subs[i].email.toLowerCase() && subs[i].isVerified) {
                 response.Message = ("The provided email has already been subscribed.");
+                response.isSubscribed = true;
+                return response;
+            }
+
+            if (email.toLowerCase() === subs[i].email.toLowerCase() && !subs[i].isVerified){
+                await SubModel.updateOne({ email }, { passCode });
+                await sendEmail(verifyEmailNotification(keys.emailSender, email, passCode));
+                response.Message = `Please verify your email account by providing the pass code we sent to ${email}.`;
                 return response;
             }
         }
 
-        const users = await UserModel.find({});
-        let verified = false;
-        let userExists = false;
+        const _subs = new SubModel();
+        _subs.passCode = passCode;
+        _subs.email = email;
 
-        //Check if email exist as a registered user and they have been verified.
-        for (let i = 0; i < users.length; i++) {
-            if (email.toLowerCase() === users[i].username.toLowerCase()) {
-                userExists = true;
-                if (users[i].isVerified) {
-                    await UserModel.updateOne({ username: users[i].username }, { isSubscribed: true });
-                    await SubModel.updateOne({ username: users[i].username }, { isVerified: true });
-                    await new SubModel({ email }).save();
-                    verified = true;
-                    break;
-                }
-            }
-        }
-
-        response.Message = `Your email at ${email} has been successfully added as a subscriber!`;
-
-        //Email is registered to a user but not verified.
-        if (userExists && !verified) {
-            const passCode = generateId(6).toUpperCase();
-            await sendEmail(verifyEmailNotification(keys.emailSender, email, passCode));
-            response.Message = `Please verify your email account by providing the pass code we sent to ${email}.`;
-        } 
-
-        //Email not registered and not verified.
-        if (!userExists && !verified) {
-            const passCode = generateId(6).toUpperCase();
-            await sendEmail(verifyEmailNotification(keys.emailSender, email, passCode));
-            response.Message = `Please verify your email account by providing the pass code we sent to ${email}.`;
-        }
+        await _subs.save();
+        await sendEmail(verifyEmailNotification(keys.emailSender, email, passCode));
+        response.Message = `Please verify your email account by providing the pass code we sent to ${email}.`;
 
         return response;
 
