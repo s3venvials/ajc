@@ -24,7 +24,7 @@ const CardReadView = (props) => {
     }, [id]);
 
     return (
-        <Container>
+        <Container style={{ paddingBottom: "75px" }}>
             <Jumbotron className="ReadsJumboTron" style={{ borderBottomRightRadius: "25px", borderBottomLeftRadius: "25px"}}>
                 {read.map((item, index) => {
                     return (

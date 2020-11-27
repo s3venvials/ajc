@@ -154,7 +154,7 @@ const HomePage = () => {
         </Jumbotron>
       </Container>
 
-      <Container>
+      <Container style={{ paddingBottom: "75px" }}>
         <Col lg={12} style={{ textAlign: "center" }}>
           <hr />
           <h3>Random Reads</h3>
