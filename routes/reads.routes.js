@@ -1,7 +1,7 @@
 let readsModel = require("../models/reads.model");
 const multer = require("multer");
 const upload = multer();
-const fs = require("fs")
+const fs = require("fs");
 const { promisify } = require("util");
 const pipeline = promisify(require("stream").pipeline);
 const { SubModel } = require("../models/subs.model");
@@ -12,102 +12,120 @@ const bcrypt = require("bcryptjs");
 
 /**
  * Reads API
- * @param {import("express").Express} app 
+ * @param {import("express").Express} app
  */
 module.exports = (app) => {
+  app.post("/api/reads/new", upload.single("file"), async (req, res) => {
+    try {
+      const {
+        file,
+        body: { title, category, name, content, imageUrl, code },
+      } = req;
+      let fileName = "";
+      let imgPath = "";
+      const subs = await SubModel.find({});
 
-    app.post("/api/reads/new", upload.single("file"), async (req, res) => {
-        try {
+      if (file) {
+        fileName = name + file.detectedFileExtension;
 
-            const { file, body: { title, category, name, content, imageUrl }} = req;
-            let fileName = "";
-            let imgPath = "";
-            const subs = await SubModel.find({});
+        await pipeline(
+          file.stream,
+          fs.createWriteStream(
+            `${__dirname}/../client/public/uploads/${fileName}`
+          )
+        );
 
-            if (file) {
+        imgPath = `/uploads/${fileName}`;
+      }
 
-                 fileName = name + file.detectedFileExtension;
+      let categories = category.split(",");
+      let reads = {
+        title,
+        category: categories,
+        content,
+        imgPath,
+        imageUrl,
+        code,
+      };
 
-                 await pipeline(
-                    file.stream,
-                    fs.createWriteStream(`${__dirname}/../client/public/uploads/${fileName}`)
-                )
+      let read = new readsModel(reads);
+      await read.save();
 
-                imgPath = `/uploads/${fileName}`;
-            }
+      for (let i = 0; i < subs.length; i++) {
+        //Send out email to all subscribed users about the new reads post.
+        await sendEmail(
+          newReadsNotification(keys.emailSender, subs[i].email, read._id, title)
+        );
+      }
 
-            let categories = category.split(",");
-            let reads = {
-                title,
-                category: categories,
-                content,
-                imgPath,
-                imageUrl
-            }
+      return res.json({ message: "Reads was added successfully!" });
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  });
 
-            let read = new readsModel(reads);
-            await read.save();
+  app.get("/api/reads/all", async (req, res) => {
+    try {
+      let allReads = await readsModel.find({});
+      res.json(allReads);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  });
 
-            for (let i = 0; i < subs.length; i++) {
-                //Send out email to all subscribed users about the new reads post.
-                await sendEmail(newReadsNotification(keys.emailSender, subs[i].email, read._id, title));
-            }
+  app.get("/api/reads/one", async (req, res) => {
+    let { id } = req.query;
 
-            return res.json({ message: "Reads was added successfully!" });
+    try {
+      let allReads = await readsModel.find({ _id: id });
+      res.json(allReads);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  });
 
-        } catch (error) {
-            console.log(error)
-            res.status(500).json(error);
+  app.post("/api/reads/count", async (req, res) => {
+    let { postCount, isRandom } = req.body;
+
+    try {
+      let reads = [];
+      let allReads = await readsModel.find({});
+
+      if (isRandom) postCount = Math.floor(Math.random() * allReads.length) + 1;
+
+      if (postCount > 0) {
+        for (var i = 0; i < allReads.length; i++) {
+          reads.push(allReads[i]);
+          if (i === postCount - 1) break;
         }
-    });
+      }
 
-    app.get("/api/reads/all", async (req, res) => {
-        try {
+      res.json(reads);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  });
 
-            let allReads = await readsModel.find({});
-            res.json(allReads);
+  app.post("/api/reads/ratings", async (req, res) => {
+    try {
+      const { id, value } = req.body;
+      const updateRes = await readsModel.findByIdAndUpdate({ _id: id }, value);
+      return res.json(updateRes);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  });
 
-        } catch (error) {
-            res.status(500).json(error);
-        }
-    });
-
-    app.get("/api/reads/one", async (req, res) => {
-
-        let { id } = req.query;
-
-        try {
-
-            let allReads = await readsModel.find({ _id: id });
-            res.json(allReads);
-
-        } catch (error) {
-            res.status(500).json(error);
-        }
-    });
-
-    app.post("/api/reads/count", async (req, res) => {
-
-        let { postCount, isRandom } = req.body;
-
-        try {
-            let reads = [];
-            let allReads = await readsModel.find({});
-
-            if (isRandom) postCount = Math.floor(Math.random() * allReads.length) + 1;
-
-            if (postCount > 0) {
-                for (var i = 0; i < allReads.length; i++) {
-                    reads.push(allReads[i]);
-                    if (i === postCount - 1) break;
-                }   
-            }
-
-            res.json(reads);
-
-        } catch (error) {
-            res.status(500).json(error);
-        }
-    });
-
-}
+  app.post("/api/reads/comments", async (req, res) => {
+    try {
+      const { id, name, message, createdDate } = req.body;
+      const updateRes = await readsModel.findByIdAndUpdate(
+        { _id: id },
+        { $push: { comments: { name, message, createdDate } } }
+      );
+      return res.json(updateRes);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  });
+};

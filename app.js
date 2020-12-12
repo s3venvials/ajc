@@ -6,7 +6,7 @@ const app = express();
 const keys = require("./config/keys");
 
 mongoose.Promise = global.Promise;
-mongoose.connect(keys.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(keys.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
 
 app.use(bodyParser.json());
 app.use(cors(keys.corsOptions));

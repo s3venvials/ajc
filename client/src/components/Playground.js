@@ -34,44 +34,16 @@ export default class Playground extends Component {
     isProcessing: false // tiny way to stop a user from hitting run 10000 times in a row
   };
 
-  // helpers cuz lazy
+  // helpers
   setTitle = title => this.setState({ title });
   setHistory = history => this.setState({ history });
   setHtml = html => this.setState({ html });
   setCss = css => this.setState({ css });
   setJs = js => this.setState({ js });
 
-  /**
-   * Grab the gist on first mount
-   * mocking a gist id for now
-   * https://gist.github.com/sevilayha/efe7fe257c9bfdc4d81aa654ddbb5bec
-   */
-  componentDidMount() {
-    const gistId = this.props.gistId || 'efe7fe257c9bfdc4d81aa654ddbb5bec';
-    this.getGist(gistId);
-  }
-
-  /**
-   * Get the gist from GitHub API
-   * Parse for the .html, .css, .js files
-   * This is simple. Will only pull the first file in the gist of each extension
-   */
-  getGist = id => {
-    fetch(`https://api.github.com/gists/${id}`)
-      .then(response => response.json())
-      .then(data => {
-        // find the first .html, .css, .js files and apply them as the content
-        const fileNames = Object.keys(data.files);
-        // const gistHtml = fileNames.find(file => file.includes('.html'));
-        // const gistCss = fileNames.find(file => file.includes('.css'));
-        const gistJs = fileNames.find(file => file.includes('.js'));
-
-        this.setTitle("Interactive Shell");
-        // if (gistHtml) this.setHtml(data.files[gistHtml].content);
-        // if (gistCss) this.setCss(data.files[gistCss].content);
-        if (gistJs) this.setJs(data.files[gistJs].content);
-      });
-  };
+  // componentDidUpdate() {
+  //   this.setJs(this.props.code);
+  // }
 
   addHistory = text => {
     const newHistory = [...this.state.history, { text }];
@@ -110,10 +82,6 @@ export default class Playground extends Component {
         <PlaygroundHeader title={title} runCode={this.runCode} />
 
         <div className="playground-content">
-          {/* editors */}
-          {/* TODO: add support for html and css */}
-          {/* <Editor language="html" code={html} updateCode={this.setHtml} />
-              <Editor language="css" code={css} updateCode={this.setCss} /> */}
           <Editor language="javascript" code={js} updateCode={this.setJs} />
 
           {/* browser will run all of our code in an iframe */}

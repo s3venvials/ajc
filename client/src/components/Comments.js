@@ -1,59 +1,99 @@
-import React from 'react';
-import { Card, Row, Col } from "react-bootstrap";
-import moment from 'moment';
+import React, { useState, useEffect } from "react";
+import { Form, Button, Card, Row, Col } from "react-bootstrap";
+import moment from "moment";
 import CommentRating from "./CommentRating";
+import axios from "axios";
 
-let date = moment(Date.now());
+const Comments = (props) => {
+  const id = window.location.pathname.split("/")[2];
+  const [name, setName] = useState("");
+  const [message, setMessage] = useState("");
+  const [comments, setComments] = useState([]);
 
-let comments = [
-    {
-        name: "Mark",
-        date: date.format('LLL'),
-        message: "From its medieval origins to the digital era, learn everything there is to know about the ubiquitous lorem ipsum passage."
-    },
-    {
-        name: "Pete",
-        date: date.format('LLL'),
-        message: "Great read!"
-    },
-    {
-        name: "Sara",
-        date: date.format('LLL'),
-        message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+  useEffect(() => { if(props.comments) setComments([...props.comments]) }, [props.comments]);
+
+  const updateComments = (value) => props.updateComments(value);
+
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+
+      const res = await axios.post("/api/reads/comments", {
+        id,
+        name,
+        message,
+        createdDate: moment(Date.now()),
+      });
+
+      if (res.data) {
+          updateComments(true);
+          setComments([...res.data.comments]);
+          setName("");
+          setMessage("");
+      }
+
+    } catch (error) {
+      console.log(error);
     }
-]
+  };
 
-const Comments = () => {
-    return (
-        <div>
-            {
-                comments.map((item, index) => {
-                    return (
-                        <Card key={index} style={{ marginTop: "1em" }}>
-                            <Card.Header>
-                                <Row>
-                                    <Col lg={6} xs={7}>                                      
-                                        <i className="far fa-user-circle fa-lg" style={{ float: 'left', margin: '0.2em' }}></i> <h5>{item.name}</h5> 
-                                    </Col>
-                                    <Col lg={6} xs={5}>
-                                        <span style={{ float: 'right' }}>{item.date}</span>
-                                    </Col>
-                                </Row>
-                            </Card.Header>
-                            <Card.Body>
-                                {item.message}
-                            </Card.Body>
-                            <Card.Footer>
-                                <CommentRating />
-                            </Card.Footer>
-                        </Card>
-                    )
-                })
+  return (
+    <div>
+      <Form style={{ marginTop: "1em" }} onSubmit={handleSubmit}>
+        <Form.Group>
+          <Form.Label>
+            <strong>First Name</strong>
+          </Form.Label>
+          <Form.Control
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </Form.Group>
 
-            }
-        </div>
+        <Form.Group controlId="commentForm.ControlTextarea">
+          <Form.Label>
+            <strong>
+              <i className="far fa-comment"></i> Leave a comment
+            </strong>
+          </Form.Label>
+          <Form.Control
+            as="textarea"
+            rows="3"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
+        </Form.Group>
 
-    )
-}
+        <Button type="submit">Submit</Button>
+      </Form>
+
+      {comments.map((item, index) => {
+        return (
+          <Card key={index} style={{ marginTop: "1em" }}>
+            <Card.Header>
+              <Row>
+                <Col lg={6} xs={7}>
+                  <i
+                    className="far fa-user-circle fa-lg"
+                    style={{ float: "left", margin: "0.2em" }}
+                  ></i>{" "}
+                  <h5>{item.name}</h5>
+                </Col>
+                <Col lg={6} xs={5}>
+                  <span style={{ float: "right" }}>{item.createdDate}</span>
+                </Col>
+              </Row>
+            </Card.Header>
+            <Card.Body>{item.message}</Card.Body>
+            <Card.Footer>
+              <CommentRating />
+            </Card.Footer>
+          </Card>
+        );
+      })}
+    </div>
+  );
+};
 
 export default Comments;

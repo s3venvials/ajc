@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import CardReads from "./CardReads";
-import { Container, Jumbotron, Form, Button, Image } from "react-bootstrap";
+import { Container, Form, Button, Image } from "react-bootstrap";
 
 const Reads = () => {
   const [searchValue, setValue] = useState("");
