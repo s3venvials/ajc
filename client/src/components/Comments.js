@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Card, Row, Col } from "react-bootstrap";
+import { Form, Button, Card, Row, Col, Alert } from "react-bootstrap";
 import moment from "moment";
 import CommentRating from "./CommentRating";
 import axios from "axios";
@@ -9,8 +9,11 @@ const Comments = (props) => {
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [comments, setComments] = useState([]);
+  const [alertMsg, setAlert] = useState("");
 
-  useEffect(() => { if(props.comments) setComments([...props.comments]) }, [props.comments]);
+  useEffect(() => {
+    if (props.comments) setComments([...props.comments]);
+  }, [props.comments]);
 
   const updateComments = (value) => props.updateComments(value);
 
@@ -18,20 +21,27 @@ const Comments = (props) => {
     try {
       e.preventDefault();
 
+      if (!message || message === " " || message.length < 10) {
+        return;
+      }
+
       const res = await axios.post("/api/reads/comments", {
         id,
-        name,
+        name: name ? name : "Anonymous",
         message,
         createdDate: moment(Date.now()),
       });
 
       if (res.data) {
-          updateComments(true);
-          setComments([...res.data.comments]);
-          setName("");
-          setMessage("");
+        updateComments(true);
+        setComments([...res.data.comments]);
+        setName("");
+        setMessage("");
+        setAlert("Comment was successfully added!");
+        setTimeout(() => {
+          setAlert("");
+        }, 3000);
       }
-
     } catch (error) {
       console.log(error);
     }
@@ -67,6 +77,12 @@ const Comments = (props) => {
 
         <Button type="submit">Submit</Button>
       </Form>
+
+      {alertMsg && (
+        <Alert variant="success" style={{ marginTop: "1em" }}>
+          {alertMsg}
+        </Alert>
+      )}
 
       {comments.map((item, index) => {
         return (
