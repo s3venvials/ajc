@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Card, Row, Col, Alert } from "react-bootstrap";
 import moment from "moment";
-import CommentRating from "./CommentRating";
+// import CommentRating from "./CommentRating";
 import axios from "axios";
 
 const Comments = (props) => {
@@ -78,6 +78,10 @@ const Comments = (props) => {
         <Button type="submit">Submit</Button>
       </Form>
 
+      <div style={{ textAlign: 'right', marginBottom: '1em' }}>
+        <h5>Comments {comments.length}</h5>
+      </div>
+
       {alertMsg && (
         <Alert variant="success" style={{ marginTop: "1em" }}>
           {alertMsg}
@@ -97,14 +101,12 @@ const Comments = (props) => {
                   <h5>{item.name}</h5>
                 </Col>
                 <Col lg={6} xs={5}>
-                  <span style={{ float: "right" }}>{item.createdDate}</span>
+                  <span style={{ float: "right" }}>{moment(item.createdDate).format('LLL')}</span>
                 </Col>
               </Row>
             </Card.Header>
             <Card.Body>{item.message}</Card.Body>
-            <Card.Footer>
-              <CommentRating />
-            </Card.Footer>
+            <Card.Footer>{/* <CommentRating /> */}</Card.Footer>
           </Card>
         );
       })}

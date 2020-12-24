@@ -24,8 +24,6 @@ const CardReads = (props) => {
     getAllReads();
   }, [props.postCount, props.isRandom, update]);
 
-  if (props.searchValue) {
-  }
   useEffect(() => {
     setUpdate(false);
     let searchByHashtag = false;
@@ -49,7 +47,11 @@ const CardReads = (props) => {
       }
     }
 
-    if (filteredList.length > 0) setData(filteredList);
+    if (filteredList.length > 0) {
+      setData(filteredList);
+    } else {
+      setData([]);
+    }
 
     if (props.searchValue !== "" && filteredList.length === 0)
       filteredList = [];

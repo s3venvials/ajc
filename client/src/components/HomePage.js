@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import Button from "react-bootstrap/Button";
@@ -9,7 +9,7 @@ import Image from "react-bootstrap/Image";
 import SubscribePopover from "./SubscribePopover";
 import ConfirmPassCode from "./ConfirmPassCode";
 
-const HomePage = () => {
+const HomePage = (props) => {
   const [postCount, setPostCount] = useState(3);
   const [isRandom, setisRandom] = useState(0);
   const [email, setEmail] = useState("");
@@ -22,6 +22,17 @@ const HomePage = () => {
     setisRandom(0);
     setPostCount(event.target.value);
   };
+
+  useEffect(() => {
+    let timeOut;
+    if (successMsg) {
+      timeOut = setTimeout(() => {
+        setSuccessMsg("");
+      }, 3000)
+    }
+
+    return () => clearTimeout(timeOut);
+  });
 
   const handleSub = async (e) => {
     try {

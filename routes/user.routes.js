@@ -7,7 +7,7 @@ const {
 } = require("../modules");
 const { sendEmail } = require("../utils");
 const keys = require("../config/keys");
-const { verifyEmailNotification } = require("../modules/email/templates");
+const { verifyEmailNotification, feedBackNotification } = require("../modules/email/templates");
 const { UserModel } = require("../models/user.model");
 const { generateId } = require("../utils");
 const { SubModel } = require("../models/subs.model");
@@ -106,6 +106,19 @@ module.exports = (app) => {
       const { email } = req.body;
       const createSubRes = await createSub(email);
       return res.json(createSubRes);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  });
+
+  app.post("/api/user/unsubscribe", async (req, res) => {
+    try {
+      const { id, response, other } = req.body;
+
+      await SubModel.findByIdAndDelete({ _id: id });
+      await sendEmail(feedBackNotification(keys.emailSender, keys.emailSender, response, other));
+      
+      return res.json();
     } catch (error) {
       res.status(500).json(error);
     }

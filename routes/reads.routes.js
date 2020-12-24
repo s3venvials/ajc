@@ -8,7 +8,6 @@ const { SubModel } = require("../models/subs.model");
 const { sendEmail } = require("../utils");
 const { newReadsNotification } = require("../modules/email/templates");
 const keys = require("../config/keys");
-const bcrypt = require("bcryptjs");
 
 /**
  * Reads API
@@ -53,9 +52,17 @@ module.exports = (app) => {
 
       for (let i = 0; i < subs.length; i++) {
         //Send out email to all subscribed users about the new reads post.
-        await sendEmail(
-          newReadsNotification(keys.emailSender, subs[i].email, read._id, title)
-        );
+        if (subs[i].isVerified) {
+          await sendEmail(
+            newReadsNotification(
+              keys.emailSender,
+              subs[i].email,
+              read._id,
+              title,
+              subs[i]._id
+            )
+          );
+        }
       }
 
       return res.json({ message: "Reads was added successfully!" });

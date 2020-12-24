@@ -40,7 +40,7 @@ const Reads = () => {
               size="lg"
               type="text"
               value={searchValue}
-              placeholder="Search by title or hashtag e.g. #Test"
+              placeholder="Search by title or hashtag e.g. #Beginner"
               onChange={handleChange}
             />
             {searchValue && (

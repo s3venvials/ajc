@@ -2,7 +2,6 @@ import React from "react"; //{ useEffect, useState }
 // import AuthModal from './AuthModal';
 import { Navbar, Nav, Container } from "react-bootstrap"; // Button, Spinner
 // import axios from "axios";
-import { history } from "../helpers";
 
 const Header = () => {
   //   const [signedIn, setIsSignedIn] = useState(false);
@@ -61,14 +60,14 @@ const Header = () => {
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Container>
-        <Navbar.Brand onClick={() => history.push("/")}>AJC</Navbar.Brand>
+        <Navbar.Brand href="/">AJC</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="mr-auto">
-            <Nav.Link onClick={() => history.push("/")}>Home</Nav.Link>
-            <Nav.Link onClick={() => history.push("/reads")}>Reads</Nav.Link>
-            <Nav.Link onClick={() => history.push("/donate")}>Donate</Nav.Link>
-            <Nav.Link onClick={() => history.push("/shop")}>Shop</Nav.Link>
+            <Nav.Link href="/">Home</Nav.Link>
+            <Nav.Link href="/reads">Reads</Nav.Link>
+            <Nav.Link href="/donate">Donate</Nav.Link>
+            <Nav.Link href="/shop">Shop</Nav.Link>
           </Nav>
           {/* <Nav>
                         {
