@@ -41,10 +41,6 @@ export default class Playground extends Component {
   setCss = css => this.setState({ css });
   setJs = js => this.setState({ js });
 
-  // componentDidUpdate() {
-  //   this.setJs(this.props.code);
-  // }
-
   addHistory = text => {
     const newHistory = [...this.state.history, { text }];
     this.setHistory(newHistory);

@@ -97,11 +97,11 @@ module.exports = (app) => {
     try {
       let reads = [];
       let allReads = await readsModel.find({});
-
+      
       if (isRandom) postCount = Math.floor(Math.random() * allReads.length) + 1;
 
       if (postCount > 0) {
-        for (var i = 0; i < allReads.length; i++) {
+        for (let i = 0; i < allReads.length; i++) {
           reads.push(allReads[i]);
           if (i === postCount - 1) break;
         }

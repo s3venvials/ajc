@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Container, Jumbotron, Row, Col, Image } from "react-bootstrap";
+import { Container, Jumbotron, Row, Col, Image, Media } from "react-bootstrap";
 import ReactHtmlParser from "react-html-parser";
 import Playground from "./Playground";
 import Rating from "./Rating";
@@ -22,7 +22,6 @@ const CardReadView = (props) => {
       try {
         const res = await axios.get(`/api/reads/one?id=${id}`);
         const read = res.data[0];
-        console.log(res.data)
 
         setRead([...res.data]);
         setCode(read.code);
@@ -33,9 +32,7 @@ const CardReadView = (props) => {
         setComments([...comments]);
         
         setUpdate(false);
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     };
     getRead(id);
   }, [id, update]);

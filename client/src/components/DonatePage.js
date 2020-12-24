@@ -36,7 +36,12 @@ const DonatePage = () => {
                 honestly gives me the drive to continue to grow this content.
               </p>
 
-              <Button variant="primary">Donate With PayPal</Button>
+              <h6>
+                <i className="fas fa-hand-holding-usd"></i> Cash App: ajc1358
+              </h6>
+              <h6>
+                <i className="fas fa-hand-holding-usd"></i> Venmo: ajc1358
+              </h6>
             </div>
           </div>
         </Col>
@@ -48,10 +53,13 @@ const DonatePage = () => {
                 Head on over to the shop page where I've added products and
                 services through affiliate marketing. Buy from trusted companies
                 at no additional cost, and by doing so it provides me with a
-                commission and you get a product you want, it's a win-win!.
+                commission and you get a product or service you want, it's a
+                win-win!.
               </p>
 
-              <Button variant="success" onClick={() => history.push("/shop")}>Go To Shop</Button>
+              <Button variant="success" onClick={() => history.push("/shop")}>
+                Go To Shop
+              </Button>
             </div>
           </div>
         </Col>
