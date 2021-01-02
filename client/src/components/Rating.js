@@ -75,8 +75,9 @@ const Rating = (props) => {
     <Row>
       {btns.map((item, index) => {
         return (
-          <Col key={index} xs={3} lg={1} title={item.title}>
+          <Col key={index} xs={3} lg={props.size} title={item.title}>
             <Button
+              size="sm"
               onClick={item.onClick}
               variant={item.variant}
               style={{ border: "none" }}

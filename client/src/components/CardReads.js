@@ -5,6 +5,7 @@ import { Row, Col, Spinner } from "react-bootstrap";
 import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
 import ReactHtmlParser from "react-html-parser";
+import Rating from "./Rating";
 
 const CardReads = (props) => {
   const [data, setData] = useState([]);
@@ -110,6 +111,11 @@ const CardReads = (props) => {
                     Read More
                   </Button>
                 </Card.Body>
+                <Card.Footer>
+                  <Row>
+                    <Rating size={2} ratings={ { likes: item.likes, dislikes: item.dislikes, favorited: item.favorited, shares: item.shares } } />
+                  </Row>
+                </Card.Footer>
               </Card>
             </Col>
           );

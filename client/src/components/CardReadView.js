@@ -93,7 +93,7 @@ const CardReadView = (props) => {
       })}
 
       <Playground code={code} />
-      <Rating ratings={ratings} updateRatings={getRatingsUpdate} />
+      <Rating ratings={ratings} updateRatings={getRatingsUpdate} size={1}/>
       <Comments comments={comments} updateComments={getCommentsUpdate} />
     </Container>
   );
