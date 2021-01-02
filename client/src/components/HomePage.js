@@ -178,7 +178,8 @@ const HomePage = (props) => {
       <Container style={{ paddingBottom: "75px" }}>
         <Col lg={12} style={{ textAlign: "center" }}>
           {/* <hr /> */}
-          <h3 style={{ marginBottom: "1em" }}>Random Reads</h3>
+          <h2>Reads</h2>
+          <a style={{ marginBottom: "1em" }} href="/reads">View All Reads</a>
           {/* <hr /> */}
         </Col>
 
@@ -187,6 +188,7 @@ const HomePage = (props) => {
             <Form.Group controlId="random">
               <Form.Label>
                 <h5>Pick A Number</h5>
+                <small>Change the number of reads to display.</small>
               </Form.Label>
               <Form.Control
                 type="number"
@@ -197,10 +199,12 @@ const HomePage = (props) => {
               />
             </Form.Group>
           </Col>
+
           <Col lg={3}>
             <Form.Group controlId="randomBtn">
               <Form.Label>
                 <h5>Feeling Lucky Punk?</h5>
+                <small>Returns a random read.</small>
               </Form.Label>
               <Form>
                 <Button

@@ -12,11 +12,11 @@ const CardReads = (props) => {
   const [showSpinner, setShowSpinner] = useState(true);
 
   useEffect(() => {
-    let getAllReads = async () => {
+    const getAllReads = async () => {
       try {
-        let res = await axios.post("/api/reads/count", {
+        const res = await axios.post("/api/reads/count", {
           postCount: props.postCount,
-          isRandom: props.isRandom,
+          isRandom: props.isRandom > 0 ? true : false,
         });
         if (res.data) setData([...res.data]);
       } catch {}

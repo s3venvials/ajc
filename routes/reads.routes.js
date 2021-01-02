@@ -98,17 +98,22 @@ module.exports = (app) => {
       let reads = [];
       let allReads = await readsModel.find({});
       
-      if (isRandom) postCount = Math.floor(Math.random() * allReads.length) + 1;
-
-      if (postCount > 0) {
-        for (let i = 0; i < allReads.length; i++) {
-          reads.push(allReads[i]);
-          if (i === postCount - 1) break;
+      if (isRandom) {
+        const index = Math.floor(Math.random() * allReads.length) + 1;
+        reads.push(allReads[index]);
+        
+      } else {
+        if (postCount > 0) {
+          for (let i = 0; i < allReads.length; i++) {
+            reads.push(allReads[i]);
+            if (i === postCount - 1) break;
+          }
         }
       }
 
       res.json(reads);
     } catch (error) {
+      console.log(error);
       res.status(500).json(error);
     }
   });
