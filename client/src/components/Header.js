@@ -67,7 +67,7 @@ const Header = () => {
             <Nav.Link href="/">Home</Nav.Link>
             <Nav.Link href="/reads">Reads</Nav.Link>
             <Nav.Link href="/donate">Donate</Nav.Link>
-            <Nav.Link href="/shop">Shop</Nav.Link>
+            {/* <Nav.Link href="/shop">Shop</Nav.Link> */}
           </Nav>
           {/* <Nav>
                         {

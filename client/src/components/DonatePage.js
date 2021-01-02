@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Button, Image, Row, Col } from "react-bootstrap";
-import { history } from "../helpers";
+// import { history } from "../helpers";
 
 const DonatePage = () => {
   return (
@@ -48,7 +48,7 @@ const DonatePage = () => {
         <Col lg={6}>
           <div style={{ marginTop: "0.5em" }}>
             <div style={{ padding: "0.5em" }}>
-              <h5>Other ways to Support</h5>
+              {/* <h5>Other ways to Support</h5>
               <p>
                 Head on over to the shop page where I've added products and
                 services through affiliate marketing. Buy from trusted companies
@@ -59,7 +59,7 @@ const DonatePage = () => {
 
               <Button variant="success" onClick={() => history.push("/shop")}>
                 Go To Shop
-              </Button>
+              </Button> */}
             </div>
           </div>
         </Col>

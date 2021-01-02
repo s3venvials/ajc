@@ -1,3 +1,76 @@
+// import React, { useState, useEffect } from "react";
+// import { Button } from "react-bootstrap";
+// import Editor from "./Editor";
+// import Browser from "./Browser";
+// import Console from "./Console";
+
+// const PlayGround = (props) => {
+//   const [history, setHistory] = useState([]);
+//   const [title] = useState("");
+//   const [js, setJs] = useState("");
+//   const [isProcessing, setIsProcessing] = useState(false);
+//   const { playgroundId } = props;
+
+//   const addHistory = (text) => {
+//     const newHistory = [...history, { text }];
+//     setHistory(newHistory);
+//   };
+
+//   const clearHistory = () => { setHistory([]); console.log("clearing history") };
+
+//   useEffect(() => {
+//     if (props.code && !js) setJs(props.code);
+//     return;
+//   }, [setJs, js, props.code]);
+
+//   /**
+//    * Since our browser only runs when code is changed, we set things to blank and then reset them
+//    * TODO: Probably a better way to do this than the setTimeout()
+//    */
+//   const runCode = () => {
+//     if (isProcessing) return false;
+//     setIsProcessing(true);
+
+//     setJs(" ");
+
+//     setTimeout(() => {
+//       setJs(js);
+//       setIsProcessing(false);
+//     }, 250);
+//   };
+
+//   const PlaygroundHeader = ({ title, runCode }) => (
+//     <div className="playground-header">
+//       <div className="columns">
+//         <div className="column">
+//           <h2 className="title is-6">{title}</h2>
+//         </div>
+//         <div style={{ marginBottom: "1em" }}>
+//           <Button onClick={runCode}>Execute</Button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+
+//   return (
+//     <div className="playground">
+//       <PlaygroundHeader title={title} runCode={runCode} />
+
+//       <div className="playground-content">
+//         <Editor language="javascript" code={js} updateCode={setJs} />
+
+//         {/* browser will run all of our code in an iframe */}
+//         <Browser playgroundId={playgroundId} js={js} addHistory={addHistory} />
+
+//         {/* console only shows the output of history */}
+//         <Console history={history} clearHistory={clearHistory} />
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default PlayGround;
+  
 import React, { Component } from 'react';
 import { Button } from "react-bootstrap";
 import Editor from './Editor';

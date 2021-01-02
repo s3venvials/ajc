@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Container, Jumbotron, Row, Col, Image, Media } from "react-bootstrap";
+// eslint-disable-next-line
+import { Container, Jumbotron, Row, Col, Image, Media, Form } from "react-bootstrap";
 import ReactHtmlParser from "react-html-parser";
 import Playground from "./Playground";
 import Rating from "./Rating";
@@ -73,6 +74,20 @@ const CardReadView = (props) => {
             </Row>
 
             {ReactHtmlParser(item.content)}
+            
+            {code &&  
+              <>
+              <h5>Try it Your Self!</h5>
+              <p>Copy or manually write the code below!</p>
+
+              <Form>
+                <Form.Group>
+                  <Form.Control as="textarea" rows={10} readOnly value={code} />
+                </Form.Group>
+              </Form> 
+              </>
+            }
+           
           </div>
         );
       })}

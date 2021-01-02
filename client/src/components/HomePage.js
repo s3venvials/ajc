@@ -28,7 +28,7 @@ const HomePage = (props) => {
     if (successMsg) {
       timeOut = setTimeout(() => {
         setSuccessMsg("");
-      }, 3000)
+      }, 3000);
     }
 
     return () => clearTimeout(timeOut);
@@ -74,7 +74,7 @@ const HomePage = (props) => {
   return (
     <>
       <Container fluid style={{ padding: "0" }}>
-        <Jumbotron style={{ backgroundColor: "#f5f5f5", borderRadius: "0" }}>
+        <Jumbotron style={{ backgroundColor: "#FFF", borderRadius: "0" }}>
           <Container>
             <Row>
               <Col lg={6} sm={12}>
@@ -91,8 +91,8 @@ const HomePage = (props) => {
                 <p style={{ opacity: "0.5", paddingLeft: "3em" }}>- AJC</p>
 
                 <Image
-                  style={{ border: "none", backgroundColor: "#f5f5f5" }}
-                  src="https://res.cloudinary.com/frontndev/image/upload/c_scale,h_250,w_425/v1594492723/ajc-bc_jcv3eo.png"
+                  style={{ border: "none" }}
+                  src="https://res.cloudinary.com/frontndev/image/upload/c_scale,h_250,w_425/v1609613062/ajc_white_bg_kssl4h.png"
                   alt="ajc"
                   thumbnail
                 />
@@ -110,9 +110,19 @@ const HomePage = (props) => {
                     <i className="fab fa-twitter"></i>
                   </a>
 
-                  {resMsg && <Alert variant="info"> <i className="fas fa-info-circle"></i> {resMsg}</Alert> }
+                  {resMsg && (
+                    <Alert variant="info">
+                      {" "}
+                      <i className="fas fa-info-circle"></i> {resMsg}
+                    </Alert>
+                  )}
 
-                  {successMsg && <Alert variant="success"> <i className="fas fa-check"></i> {successMsg}</Alert>}
+                  {successMsg && (
+                    <Alert variant="success">
+                      {" "}
+                      <i className="fas fa-check"></i> {successMsg}
+                    </Alert>
+                  )}
 
                   {showPassCodeField ? (
                     <ConfirmPassCode
@@ -167,9 +177,9 @@ const HomePage = (props) => {
 
       <Container style={{ paddingBottom: "75px" }}>
         <Col lg={12} style={{ textAlign: "center" }}>
-          <hr />
-          <h3>Random Reads</h3>
-          <hr />
+          {/* <hr /> */}
+          <h3 style={{ marginBottom: "1em" }}>Random Reads</h3>
+          {/* <hr /> */}
         </Col>
 
         <Row>

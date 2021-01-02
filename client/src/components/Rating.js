@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Row, Col, Button } from "react-bootstrap";
 import axios from "axios";
 const id = window.location.pathname.split("/")[2];
@@ -18,7 +18,7 @@ const Rating = (props) => {
       setShares(shares);
     }
     return;
-  });
+  }, [props.ratings]);
 
   const updateRatings = (value) => props.updateRatings(value);
 
@@ -26,16 +26,14 @@ const Rating = (props) => {
     try {
       event.preventDefault();
 
-      const res = await axios.post(
+      await axios.post(
         "/api/reads/ratings",
         { id, value },
         { withCredentials: true }
       );
 
       updateRatings(true);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const btns = [
