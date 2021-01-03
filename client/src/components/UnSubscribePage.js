@@ -98,6 +98,8 @@ const UnSubscribePage = () => {
             />
           )}
         </Form.Group>
+        
+        <small>You must press confirm to be removed from our mailing list.</small><br />
 
         {spinner ? (
           <Button>

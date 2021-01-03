@@ -100,6 +100,10 @@ const HomePage = (props) => {
               <Col lg={6} sm={12}>
                 <div>
                   <h4>Follow Us!</h4>
+
+                  <small>Discuss related topics or just reach out to say hi!</small>
+                  <br />
+
                   <a
                     href="https://twitter.com/averagejoecodi1"
                     title="Twitter"
@@ -130,7 +134,7 @@ const HomePage = (props) => {
                     />
                   ) : (
                     <>
-                      <Row>
+                      <Row style={{ marginTop: "3em" }}>
                         <Col xl={2} lg={3} xs={3}>
                           <Form.Label>
                             <h5>Subscribe</h5>
@@ -169,6 +173,10 @@ const HomePage = (props) => {
                     </>
                   )}
                 </div>
+
+                {/* <div style={{ marginTop: "3em" }}>
+                    <h5>Topics consist of...</h5>
+                </div> */}
               </Col>
             </Row>
           </Container>

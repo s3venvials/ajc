@@ -57,8 +57,7 @@ module.exports = (app) => {
             newReadsNotification(
               keys.emailSender,
               subs[i].email,
-              read._id,
-              title,
+              read,
               subs[i]._id
             )
           );
@@ -67,6 +66,7 @@ module.exports = (app) => {
 
       return res.json({ message: "Reads was added successfully!" });
     } catch (error) {
+      console.log(error)
       res.status(500).json(error);
     }
   });
